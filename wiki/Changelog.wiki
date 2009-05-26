@@ -2,20 +2,20 @@
 #labels Featured,Phase-Implementation
 
 = 0.1 =
-* Merged Stranded 1.8 and Spacebuild Classic 1.1
-* Removed trees fading in and rising from ground.
-* Disabled seeds in space.
-* Fixed onplanet for non-spacebuild maps.
-* Decreased planting limit radius.
-* Made seeds non-physics objects.
+  * Merged Stranded 1.8 and Spacebuild Classic 1.1
+  * Removed trees fading in and rising from ground.
+  * Disabled seeds in space.
+  * Fixed onplanet for non-spacebuild maps.
+  * Decreased planting limit radius.
+  * Made seeds non-physics objects.
 
 = 0.2 =
-* Fixed resource crates.
-* Fixed NULL entity error on player disconnect.
-* Added Classes
-* Added autoloading gamesave of map name.
-* Changed several entities to prop_physics_multiplayer to save on resources.
+  * Fixed resource crates.
+  * Fixed NULL entity error on player disconnect.
+  * Added Classes
+  * Added autoloading gamesave of map name.
+  * Changed several entities to prop_physics_multiplayer to save on resources.
 
 = 0.3 =
-* Added Class Spawnpoints
-* Gave Cops Stunsticks
+  * Added Class Spawnpoints
+  * Gave Cops Stunsticks
