@@ -575,27 +575,30 @@ function GMS.IsInWater(pos)
          return tr.Hit
 end
 
-function PlayerMeta:Jail()
-	self.Jailed = true
+function GMS.Jail(ply)
+	--Msg(ply.Jailed)
+	ply.Jailed = true
+	--Msg(ply.Jailed)
 	for k,ent in pairs(ents.GetAll()) do
 		if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == 'jail')) then
-			ent:SpawnPlayer(self)
+			ent:SpawnPlayer(ply)
 		end
 	end
 	local jailtime = GetConVar('gms_JailTime'):GetInt()
-	timer.Simple(jailtime, self:UnJail())
+	timer.Simple(jailtime, GMS.UnJail, ply)
 end
 
-function PlayerMeta:UnJail()
-	self.Jailed = false
-	local pos = self:GetPos()
+function GMS.UnJail(ply)
+	--Msg('UNJAIL TIME!!!')
+	ply.Jailed = false
+	local pos = ply:GetPos()
 	local range = GetConVar('gms_JailRadius'):GetInt()
 	for k,v in pairs(ents.FindInSphere(pos,range)) do
 		if ((v:GetClass() == 'gms_spawnpoint') and (v:GetSpawnName() == 'jail')) then
 			-- Is in range of jail still, send to spawn.
 			for k,ent in pairs(ents.GetAll()) do
-				if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == self:Team())) then
-					ent:SpawnPlayer(self)
+				if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == ply:Team())) then
+					ent:SpawnPlayer(ply)
 				end
 			end
 		end
@@ -1167,9 +1170,9 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 function GM:PlayerSpawn(ply)
-	Msg(ply.Jailed)
+	--Msg(ply.Jailed)
 	if ply.Jailed then
-		Msg('U IS IN JAIL!!!')
+		--Msg('U IS IN JAIL!!!')
 		for k,ent in pairs(ents.GetAll()) do
 			if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == 'jail')) then
 				ent:SpawnPlayer(ply)

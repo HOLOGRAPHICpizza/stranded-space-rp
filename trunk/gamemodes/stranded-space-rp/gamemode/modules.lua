@@ -2,7 +2,7 @@
 
 Msg("Loading modules.lua\n")
 
-ulx.setCategory( "SSRP" )
+ulx.setCategory( "Stranded Space RP" )
 
 -- Join Class
 function ulx.cc_class(ply, command, argv, args)
@@ -114,7 +114,7 @@ function ulx.cc_rpjail(ply, command, argv, args)
 	
 	for _, v in ipairs( targets ) do
 		ulx.logUserAct( ply, v, "#A rpjailed #T." )
-		v:Jail()
+		GMS.Jail(ply)
 	end
 end
 ulx.concommand( "rpjail", ulx.cc_rpjail, "<user(s)> - Warrants the specified players.", ULib.ACCESS_ADMIN, "!rpjail", _, ulx.ID_HELP )
