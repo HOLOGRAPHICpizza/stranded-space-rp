@@ -1,5 +1,5 @@
 #summary Project changelog.
-#labels Featured,Phase-Implementation
+#labels Featured
 
 = 0.1 =
   * Merged Stranded 1.8 and Spacebuild Classic 1.1
@@ -19,3 +19,4 @@
 = 0.3 =
   * Added Class Spawnpoints
   * Gave Cops Stunsticks
+  * Added Warrant System
