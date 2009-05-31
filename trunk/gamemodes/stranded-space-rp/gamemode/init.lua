@@ -1235,6 +1235,7 @@ function GM:PlayerLoadout(ply)
 	-- Class Specific
 	if (ply:Team() == 2) then --Cop
 		ply:Give('weapon_stunstick')
+		ply:Give('gms_arrest')
 	end
 	
 end
