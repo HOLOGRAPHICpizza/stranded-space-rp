@@ -602,18 +602,18 @@ GMS.RegisterCombi("Crowbar",COMBI,"Weapons")
 /*---------------------------------------------------------
   Stunstick
 ---------------------------------------------------------*/
-local COMBI = {}
+-- local COMBI = {}
 
-COMBI.Name = "Stunstick"
-COMBI.Description = [[This highly advanced, effective melee weapon is useful for hunting down animals and fellow stranded alike.
-You need:
-40 Iron
-]]
+-- COMBI.Name = "Stunstick"
+-- COMBI.Description = [[This highly advanced, effective melee weapon is useful for hunting down animals and fellow stranded alike.
+-- You need:
+-- 40 Iron
+-- ]]
 
-COMBI.Req = {}
-COMBI.Req["Iron"] = 40
+-- COMBI.Req = {}
+-- COMBI.Req["Iron"] = 40
 
-COMBI.Texture = "weapons/swep"
-COMBI.SwepClass = "weapon_stunstick"
+-- COMBI.Texture = "weapons/swep"
+-- COMBI.SwepClass = "weapon_stunstick"
 
-GMS.RegisterCombi("Crowbar",COMBI,"Weapons")
+-- GMS.RegisterCombi("Crowbar",COMBI,"Weapons")
