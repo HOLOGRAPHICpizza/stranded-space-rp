@@ -576,9 +576,9 @@ function GMS.IsInWater(pos)
 end
 
 function GMS.Jail(ply)
-	--Msg(ply.Jailed)
+	if not ply.Warranted then return end
+	
 	ply.Jailed = true
-	--Msg(ply.Jailed)
 	for k,ent in pairs(ents.GetAll()) do
 		if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == 'jail')) then
 			ent:SpawnPlayer(ply)
@@ -1234,7 +1234,7 @@ function GM:PlayerLoadout(ply)
 	
 	-- Class Specific
 	if (ply:Team() == 2) then --Cop
-		ply:Give('weapon_stunstick')
+		ply:Give('gms_stunstick')
 		ply:Give('gms_arrest')
 	end
 	
