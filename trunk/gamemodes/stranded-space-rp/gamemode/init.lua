@@ -15,6 +15,7 @@ Msg("Loading init.lua\n")
 include( 'shared.lua' )
 include( 'init_sb.lua' )
 include( 'modules.lua' )
+include( 'chat.lua' )
 
 // Send clientside files
 AddCSLuaFile( "cl_init.lua" )
