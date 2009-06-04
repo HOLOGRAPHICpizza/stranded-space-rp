@@ -20,3 +20,5 @@
   * Added Class Spawnpoints
   * Gave Cops Stunsticks
   * Added Warrant System
+  * Added Jail system.
+  * Added DarkRP stunstick.
