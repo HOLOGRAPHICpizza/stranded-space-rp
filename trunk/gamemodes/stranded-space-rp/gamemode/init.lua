@@ -1247,6 +1247,7 @@ function GM:PlayerDeath(ply)
              ply:SetResource(k,0)
          end
 end
+
 /*---------------------------------------------------------
 
   Character saving
