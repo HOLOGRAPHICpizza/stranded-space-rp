@@ -22,3 +22,4 @@
   * Added Warrant System
   * Added Jail system.
   * Added DarkRP stunstick.
+  * Added chat command system.
