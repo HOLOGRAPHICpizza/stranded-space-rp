@@ -14,7 +14,6 @@ Msg("Loading init.lua\n")
 -- DeriveGamemode( "sandbox" )
 include( 'shared.lua' )
 include( 'init_sb.lua' )
-include( 'modules.lua' )
 include( 'chat.lua' )
 
 // Send clientside files
