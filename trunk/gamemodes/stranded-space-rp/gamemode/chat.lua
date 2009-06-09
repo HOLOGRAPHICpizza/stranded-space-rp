@@ -213,7 +213,7 @@ AddChatCommand('/warrants', Warrants)
 --Money Commands
 function GiveMoney(ply, text)
 	local args = string.Explode(' ', text)
-	local ammount = tonumber(args[2])
+	local ammount = tonumber(args[2]) or 0
 	local plyMoney = ply:GetNWInt('money')
 	
 	if ammount < 10 then
@@ -248,3 +248,34 @@ function GiveMoney(ply, text)
 	return ''
 end
 AddChatCommand('/givemoney', GiveMoney)
+
+function DropMoney(ply, text)
+	local args = string.Explode(' ', text)
+	local ammount = tonumber(args[2]) or 0
+	local plyMoney = ply:GetNWInt('money')
+	
+	if ammount < 10 then
+		ply:SendMessage("You must drop at least $10.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	if plyMoney < ammount then
+		ply:SendMessage("You don't have that much money!",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.HitWorld then
+		local ent = ents.Create("GMS_Money")
+		ent:SetPos(tr.HitPos)
+		ent:Spawn()
+		ent:SetAmmount(ammount)
+		
+		ply:SetNWInt('money', plyMoney - ammount)
+	else
+		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
+	end
+	
+	return ''
+end
+AddChatCommand('/dropmoney', DropMoney)

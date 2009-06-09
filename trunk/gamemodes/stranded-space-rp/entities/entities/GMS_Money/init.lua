@@ -12,31 +12,27 @@ end
 --Return: Nothing
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_junk/cardboard_box004a.mdl")
+	self.Entity:SetModel("models/props/cs_assault/Money.mdl")
 
 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	self.Entity:SetSolid( SOLID_VPHYSICS )
 
-	self.Entity:SetColor(0,0,0,255)
+	self.Entity:SetColor(255,255,255,255)
+
+	self.Entity.Amount = 0
 end
 
-function ENT:SetSpawnName(spawnName)
-	self.Entity.SpawnName = spawnName
-	self.Entity:SetMaterial('models/debug/debugwhite')
-	local color = team.GetColor(spawnName)
-	self.Entity:SetColor(color.r,color.g,color.b,color.a)
+function ENT:Use( ply, caller )
+	if ( ply:IsPlayer() ) then
+		local plyMoney = ply:GetNWInt('money')
+		ply:SetNWInt('money', plyMoney + self.Entity.Amount)
+		self.Entity:Remove()
+	end
 end
 
-function ENT:GetSpawnName(spawnName)
-	return self.Entity.SpawnName
-end
-
-function ENT:SpawnPlayer(ply)
-	ply:SetPos(self.Entity:GetPos() + Vector(0,0,16))
-end
-
-function ENT:Use(ply)
+function ENT:SetAmmount(ammount)
+	self.Entity.Amount = ammount
 end
 
 function ENT:AcceptInput(input, ply)
