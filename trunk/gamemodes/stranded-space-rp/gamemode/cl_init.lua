@@ -538,19 +538,8 @@ end
 
 usermessage.Hook("gms_AddServerChatMessage",GM.IncomingServerChatMessage)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- Money HUD
+function DrawMoney()
+	draw.SimpleText('Money: $' .. LocalPlayer():GetNWInt('money'), "ScoreboardText", ScrW() - 10, ScrH() - 20, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+end
+hook.Add("HUDPaint", "DrawMoney", DrawMoney)

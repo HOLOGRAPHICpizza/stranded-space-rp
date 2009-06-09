@@ -10,7 +10,7 @@ function TalkToRange(msg, pos, size)
 	for k, v in pairs(ents) do
 		if v:IsPlayer() then
 			v:ChatPrint(msg)
-			v:PrintMessage(2, msg)
+			--v:PrintMessage(2, msg)
 		end
 	end
 end
@@ -45,13 +45,13 @@ function GM:PlayerSay(ply, text, public)
 		return string.sub(text, 3, string.len(text))
 	end
 	
-	TalkToRange(ply:Name() .. ": " .. text, ply:GetPos(), 300)
+	TalkToRange(ply:Name() .. ": " .. text, ply:GetPos(), 400)
 	return ''
 end
 
 -- Chat Commands
 function Whisper(ply, text)
-	TalkToRange('(Whisper)' .. ply:Name() .. ": " .. string.sub(text, 4, string.len(text)), ply:GetPos(), 100)
+	TalkToRange('(Whisper)' .. ply:Name() .. ": " .. string.sub(text, 4, string.len(text)), ply:GetPos(), 150)
 	return ''
 end
 AddChatCommand('/w', Whisper)
@@ -73,7 +73,9 @@ function PersonalMessage(ply, text)
 	target:PrintMessage(2, msg)
 	
 	ply:ChatPrint(ply:Name() .. ': ' .. text)
-	ply:PrintMessage(2, ply:Name() .. ': ' .. text)
+	
+	Msg('PM from ' .. ply:Name() .. ' to ' .. target:Name() .. ': ' .. string.sub(text, j+2, string.len(text)) .. '\n')
+	
 	return ''
 end
 AddChatCommand('/pm', PersonalMessage)
@@ -164,9 +166,9 @@ function Warrant(ply, text)
 	
 	local pls = player.GetAll()
 	for k, v in pairs(pls) do
-		v:SendMessage(ply:Name() .. ' warranted ' .. v:Name() .. '.',3,Color(255,255,255,255))
+		v:SendMessage(ply:Name() .. ' warranted ' .. target:Name() .. '.',3,Color(255,255,255,255))
 	end
-	MsgAll(ply:Name() .. ' warranted ' .. v:Name() .. '.')
+	MsgAll(ply:Name() .. ' warranted ' .. target:Name() .. '.\n')
 	
 	return ''
 end
@@ -184,9 +186,9 @@ function UnWarrant(ply, text)
 	
 	local pls = player.GetAll()
 	for k, v in pairs(pls) do
-		v:SendMessage(ply:Name() .. ' unwarranted ' .. v:Name() .. '.',3,Color(255,255,255,255))
+		v:SendMessage(ply:Name() .. ' unwarranted ' .. target:Name() .. '.',3,Color(255,255,255,255))
 	end
-	MsgAll(ply:Name() .. ' unwarranted ' .. v:Name() .. '.')
+	MsgAll(ply:Name() .. ' unwarranted ' .. target:Name() .. '.\n')
 	
 	return ''
 end
@@ -207,3 +209,42 @@ function Warrants(ply, text)
 	return ''
 end
 AddChatCommand('/warrants', Warrants)
+
+--Money Commands
+function GiveMoney(ply, text)
+	local args = string.Explode(' ', text)
+	local ammount = tonumber(args[2])
+	local plyMoney = ply:GetNWInt('money')
+	
+	if ammount < 10 then
+		ply:SendMessage("You must give at least $10.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	if plyMoney < ammount then
+		ply:SendMessage("You don't have that much money!",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local tr = ply:TraceFromEyes(150)
+	local target = tr.Entity
+	if not target:IsPlayer() then
+		ply:SendMessage("Aim at a player to give money to.",3,Color(200,0,0,255))
+		return ''
+	end
+	local targetMoney = target:GetNWInt('money')
+	
+	plyMoney = plyMoney - ammount
+	targetMoney = targetMoney + ammount
+	ply:SetNWInt('money', plyMoney)
+	target:SetNWInt('money', targetMoney)
+	
+	ply:SendMessage("You gave $" .. ammount .. ' to ' .. target:Name() .. '.',10,Color(255,255,255,255))
+	ply:PrintMessage(2, "You gave $" .. ammount .. ' to ' .. target:Name() .. '.')
+	target:SendMessage("You've recived $" .. ammount .. ' from ' .. ply:Name() .. '.',10,Color(255,255,255,255))
+	target:PrintMessage(2, "You've recived $" .. ammount .. ' from ' .. ply:Name() .. '.')
+	Msg(ply:Name() .. ' gave $' .. ammount .. ' to ' .. target:Name() .. '.\n')
+	
+	return ''
+end
+AddChatCommand('/givemoney', GiveMoney)

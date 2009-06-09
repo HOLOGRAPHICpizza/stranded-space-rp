@@ -37,8 +37,7 @@ local EntityMeta = FindMetaTable("Entity")
 //Convars
 CreateConVar("gms_FreeBuild","0")
 CreateConVar("gms_AllTools","0",FCVAR_ARCHIVED)
-CreateConVar("gms_AutoSave","1",FCVAR_ARCHIVED)
-CreateConVar("gms_AutoSaveTime","3",FCVAR_ARCHIVED)
+CreateConVar("gms_AutoSaveTime","2",FCVAR_ARCHIVED)
 CreateConVar("gms_physgun","1")
 CreateConVar("gms_ReproduceTrees","0")
 CreateConVar("gms_MaxReproducedTrees","50",FCVAR_ARCHIVED)
@@ -1153,6 +1152,8 @@ function GM:PlayerInitialSpawn(ply)
 		if !ply.Skills["Survival"] then ply.Skills["Survival"] = 0 end
 		
 		ply.MaxResources = (ply.Skills["Survival"] * 5) + 25
+		
+		ply:SetNWInt('money', tbl.money)
 
 		ply:SendMessage("Loaded character successfully.",3,Color(255,255,255,255))
 		ply:SendMessage("Last visited on "..tbl.date..", enjoy your stay.",10,Color(255,255,255,255))
@@ -1160,6 +1161,7 @@ function GM:PlayerInitialSpawn(ply)
 		ply:SetSkill("Survival",0)
 		ply:SetXP("Survival",0)
 		ply.MaxResources = 25
+		ply:SetNWInt('money', 750)
 	end
 	
 	if !firstPlayerMapLoad then
@@ -1254,18 +1256,32 @@ end
 
 ---------------------------------------------------------*/
 function GM.AutoSaveAllCharacters()
-         local GM = GAMEMODE
-
-         if GetConVarNumber("gms_AutoSave") == 1 then
-            for k,v in pairs(player.GetAll()) do
-                v:SendMessage("Autosaving..",3,Color(255,255,255,255))
-                GM.SaveCharacter(v)
-            end
-         end
-         
-         timer.Simple(math.Clamp(GetConVarNumber("gms_AutoSaveTime"),1,60) * 60,GM.AutoSaveAllCharacters)
+	local GM = GAMEMODE
+	
+	local ClassPayday = {
+		50,
+		50,
+		50,
+		60,
+		60,
+		100,
+		80
+	}
+	
+	for k,v in pairs(player.GetAll()) do
+		if v:Alive() then
+			local payday = ClassPayday[v:Team()]
+			local money = v:GetNWInt('money')
+			v:SetNWInt('money', money + payday)
+			v:SendMessage("Payday! You've earned $" .. payday .. '.',10,Color(255,255,255,255))
+		end
+		
+		v:SendMessage("Autosaving..",3,Color(255,255,255,255))
+		GM.SaveCharacter(v)
+	end
+	
+	timer.Simple(math.Clamp(GetConVarNumber("gms_AutoSaveTime"),1,60) * 60,GM.AutoSaveAllCharacters)
 end
-
 timer.Simple(1,GM.AutoSaveAllCharacters)
 
 function GM:PlayerDisconnected(ply)
@@ -1280,30 +1296,31 @@ function GM:ShutDown()
 end
 
 function GM.SaveCharacter(ply,cmd,args)
-         if !file.IsDir("GMStranded") then file.CreateDir("GMStranded") end
-         if !file.IsDir("GMStranded/Saves") then file.CreateDir("GMStranded/Saves") end
+	if !file.IsDir("GMStranded") then file.CreateDir("GMStranded") end
+	if !file.IsDir("GMStranded/Saves") then file.CreateDir("GMStranded/Saves") end
 
-         local tbl = {}
-         tbl["skills"] = {}
-         tbl["experience"] = {}
-         tbl["unlocks"] = {}
-         tbl["date"] = os.date("%A %m/%d/%y")
-         tbl["name"] = ply:Nick()
+	local tbl = {}
+	tbl["skills"] = {}
+	tbl["experience"] = {}
+	tbl["unlocks"] = {}
+	tbl["date"] = os.date("%A %m/%d/%y")
+	tbl["name"] = ply:Nick()
+	tbl['money'] = ply:GetNWInt('money')
 
-         for k,v in pairs(ply.Skills) do
-             tbl["skills"][k] = v
-         end
-         
-         for k,v in pairs(ply.Experience) do
-             tbl["experience"][k] = v
-         end
-         
-         for k,v in pairs(ply.FeatureUnlocks) do
-             tbl["unlocks"][k] = v
-         end
+	for k,v in pairs(ply.Skills) do
+		tbl["skills"][k] = v
+	end
+	
+	for k,v in pairs(ply.Experience) do
+		tbl["experience"][k] = v
+	end
+	
+	for k,v in pairs(ply.FeatureUnlocks) do
+		tbl["unlocks"][k] = v
+	end
 
-         file.Write("GMStranded/Saves/"..ply:UniqueID()..".txt",util.TableToKeyValues(tbl))
-         ply:SendMessage("Saved character!",3,Color(255,255,255,255))
+	file.Write("GMStranded/Saves/"..ply:UniqueID()..".txt",util.TableToKeyValues(tbl))
+	ply:SendMessage("Saved character!",3,Color(255,255,255,255))
 end
 
 concommand.Add("gms_savecharacter",GM.SaveCharacter)
