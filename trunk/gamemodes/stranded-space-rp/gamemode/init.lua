@@ -30,9 +30,6 @@ include( 'processes.lua' )
 include( 'unlocks.lua' )
 //Combis
 include( 'combinations.lua' )
-//Locals
-local PlayerMeta = FindMetaTable("Player")
-local EntityMeta = FindMetaTable("Entity")
 
 //Convars
 CreateConVar("gms_FreeBuild","0")
@@ -111,6 +108,32 @@ end
 function GM:ShowSpare1( ply )
  	 umsg.Start("gms_ToggleCommandsMenu",ply)
  	 umsg.End()
+end
+
+function GM:ShowSpare2( ply )
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
+		if owner:IsPlayer() then -- Someone owns the door.
+			if owner == ply then -- The player owns it, wants to sell.
+				tr.Entity:RemoveOwner(ply)
+				
+				local plyMoney = ply:GetNWInt('money')
+				ply:SetNWInt('money', plyMoney + 50)
+			else -- Someone else owns the door.
+				ply:SendMessage("Door already owned!",3,Color(200,0,0,255))
+			end
+		else -- No one owns it.
+			if tr.Entity:GetNWBool('notOwnable') then -- Door not ownable.
+				ply:SendMessage("Door is unownable!",3,Color(200,0,0,255))
+			else -- Buy the door.
+				tr.Entity:AddOwner(ply)
+				
+				local plyMoney = ply:GetNWInt('money')
+				ply:SetNWInt('money', plyMoney - 100)
+			end
+		end
+	end
 end
 
 function PlayerMeta:OpenCombiMenu(str)
@@ -530,15 +553,6 @@ function string.Capitalize(str)
          return str
 end
 
-function PlayerMeta:TraceFromEyes(dist)
-         local trace = {}
-         trace.start = self:GetShootPos()
-         trace.endpos = trace.start + (self:GetAimVector() * dist)
-         trace.filter = self
-         
-         return util.TraceLine(trace)
-end
-
 function EntityMeta:DropToGround()
          local trace = {}
          trace.start = self:GetPos()
@@ -603,6 +617,33 @@ function GMS.UnJail(ply)
 		end
 	end
 end
+
+function EntityMeta:AddOwner(ply)
+	local num = self:GetNWInt("OwnerNum") or 0
+	num = num + 1
+	
+	self:SetNWInt("OwnerNum", num)
+	self:SetNWInt("Owner" .. num, ply:EntIndex())
+end
+
+function EntityMeta:RemoveOwner(ply)
+	local num = self:GetNWInt("OwnerNum") or 0
+
+	for n = 1, num do
+		if ply:EntIndex() == self:GetNWInt("Owner" .. n) then
+			self:SetNWInt("Owner" .. n, -1)
+			break
+		end
+	end
+	
+	if self:GetNWInt("Owner1") == -1 then
+		for i = 1, num do
+			self:SetNWInt("Owner" .. i, -1)
+		end
+		self:SetNWInt('OwnerNum', 0)
+	end
+end
+
 /*---------------------------------------------------------
 
   Automatic tree reproduction

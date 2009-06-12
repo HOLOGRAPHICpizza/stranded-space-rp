@@ -176,6 +176,30 @@ GMS.Commands["gms_GenericCombi"] = "Combinations"
 GMS.Commands["gms_DropWeapon"] = "Drop Weapon"
 GMS.Commands["gms_options"] = "Options"
 
+-- Shared Functions and Stuff
+PlayerMeta = FindMetaTable("Player")
+EntityMeta = FindMetaTable("Entity")
+
+function PlayerMeta:TraceFromEyes(dist)
+         local trace = {}
+         trace.start = self:GetShootPos()
+         trace.endpos = trace.start + (self:GetAimVector() * dist)
+         trace.filter = self
+         
+         return util.TraceLine(trace)
+end
+
+function EntityMeta:IsDoor()
+	local class = self:GetClass()
+
+	if class == "func_door" or
+		class == "func_door_rotating" or
+		class == "prop_door_rotating" then
+		return true
+	end
+	return false
+end
+
 -- /*function GM.LoadAddons()
          -- if SERVER then Msg("Starting GMS addons.\n") end
 

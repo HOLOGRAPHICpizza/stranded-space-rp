@@ -543,3 +543,25 @@ function DrawMoney()
 	draw.SimpleText('Money: $' .. LocalPlayer():GetNWInt('money'), "ScoreboardText", ScrW() - 10, ScrH() - 20, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
 end
 hook.Add("HUDPaint", "DrawMoney", DrawMoney)
+
+-- Door HUD
+function DoorHUD()
+	local msg = 'blarg'
+	
+	local tr = LocalPlayer():TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if tr.Entity:GetNWBool('notOwnable') then
+			local msg = 'Unownable'
+		else
+			local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
+			if owner:IsPlayer() then
+				msg = owner:Name()
+			else
+				msg = 'Press F4 to rent.'
+			end
+		end
+		
+		draw.SimpleText(msg, "ScoreboardText", ScrW() / 2, ScrH() / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+end
+hook.Add("HUDPaint", "DoorHUD", DoorHUD)
