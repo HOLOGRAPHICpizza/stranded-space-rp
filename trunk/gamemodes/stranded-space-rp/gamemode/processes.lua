@@ -488,6 +488,47 @@ function PROCESS:OnStop()
 end
 
 GMS.RegisterProcess("WoodCutting",PROCESS)
+
+/*---------------------------------------------------------
+  Lockpicking
+---------------------------------------------------------*/
+local PROCESS = {}
+
+function PROCESS:OnStart()
+         self.Owner:MakeProcessBar("Picking Lock",self.Time)
+         self.Owner:Freeze(true)
+         
+         self.StartTime = CurTime()
+         
+         self:PlaySound()
+end
+
+function PROCESS:PlaySound()
+         if CurTime() - self.StartTime > self.Time then return end
+         
+         self.Owner:GetActiveWeapon():SendWeaponAnim(ACT_VM_HITCENTER)
+         self.Owner:EmitSound(Sound("physics/metal/metal_sheet_impact_bullet1.wav"))
+         
+         timer.Simple(1.5,self.PlaySound,self)
+end
+
+function PROCESS:OnStop()
+	local num = math.random(1,100)
+
+	if num < self.Data.Chance + self.Owner:GetSkill("Lockpicking") then
+		self.Data.Entity:Fire("unlock", "", 0)
+		self.Owner:IncXP("Lockpicking",math.Clamp(math.Round(50 / self.Owner:GetSkill("Lockpicking")),1 , 1000))
+		self.Owner:SendMessage("Door Unlocked", 3, Color(10,200,10,255))
+		self.Owner:EmitSound(Sound("doors/door_latch3.wav"))
+	else
+		self.Owner:SendMessage("Failed.",3,Color(200,0,0,255))
+	end
+	
+	self.Owner:Freeze(false)
+end
+
+GMS.RegisterProcess("Lockpicking",PROCESS)
+
 /*---------------------------------------------------------
   Mining
 ---------------------------------------------------------*/

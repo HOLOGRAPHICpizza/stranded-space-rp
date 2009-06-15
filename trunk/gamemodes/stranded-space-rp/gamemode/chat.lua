@@ -155,7 +155,7 @@ AddChatCommand('/mobboss', MobBoss)
 
 -- Warranting Commands
 function Warrant(ply, text)
-	if not ply:Team() == 6 then
+	if not ply:Team() == 6 or ply:IsAdmin() then
 		ply:SendMessage('You must be the Mayor to use this command.', 3, Color(200,0,0,255))
 		return ''
 	end
@@ -181,7 +181,7 @@ end
 AddChatCommand('/warrant', Warrant)
 
 function UnWarrant(ply, text)
-	if not ply:Team() == 6 then
+	if not ply:Team() == 6 or ply:IsAdmin() then
 		ply:SendMessage('You must be the Mayor to use this command.', 3, Color(200,0,0,255))
 		return ''
 	end
