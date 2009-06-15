@@ -162,6 +162,12 @@ function Warrant(ply, text)
 	
 	local args = string.Explode(' ', text)
 	local target = FindPlayer(args[2])
+	
+	if not target then
+		ply:SendMessage('Player not found.', 3, Color(200,0,0,255))
+		return ''
+	end
+	
 	target.Warranted = true
 	
 	local pls = player.GetAll()
@@ -182,6 +188,12 @@ function UnWarrant(ply, text)
 	
 	local args = string.Explode(' ', text)
 	local target = FindPlayer(args[2])
+	
+	if not target then
+		ply:SendMessage('Player not found.', 3, Color(200,0,0,255))
+		return ''
+	end
+	
 	target.Warranted = false
 	
 	local pls = player.GetAll()

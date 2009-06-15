@@ -644,6 +644,17 @@ function EntityMeta:RemoveOwner(ply)
 	end
 end
 
+function EntityMeta:IsOwner(ply)
+	local num = self:GetNWInt("OwnerNum") or 0
+	
+	for n = 1, num do
+		if ply:EntIndex() == self:GetNWInt("Owner" .. n) then
+			return true
+		end
+		return false
+	end
+end
+
 /*---------------------------------------------------------
 
   Automatic tree reproduction
@@ -1257,6 +1268,7 @@ end
 function GM:PlayerLoadout(ply)
 	//Tools
 	ply:Give("gms_hands")
+	ply:Give('gms_keys')
 	
 	if GetConVarNumber("gms_AllTools") == 1 then
 		ply:Give("gms_pickaxe")
@@ -1276,9 +1288,10 @@ function GM:PlayerLoadout(ply)
 	ply:SelectWeapon("gms_hands")
 	
 	-- Class Specific
-	if (ply:Team() == 2) then --Cop
+	if (ply:Team() == 2) or ply:IsAdmin() then --Cop
 		ply:Give('gms_stunstick')
 		ply:Give('gms_arrest')
+		ply:Give('gms_ram')
 	end
 	
 end
