@@ -2392,6 +2392,7 @@ function GM:SaveMap(name)
 	local savegame = {}
 	savegame["name"] = name
 	savegame["entries"] = {}
+	savegame['doors'] = {}
 
 	savegame_info = {}
 	savegame_info["map"] = game.GetMap()
@@ -2400,7 +2401,16 @@ function GM:SaveMap(name)
 	local num = 0
 
 	for k,ent in pairs(ents.GetAll()) do
-		--Msg(ent)
+		
+		if ent:IsValid() and ent:IsDoor() and ent:GetNWBool('notOwnable') then
+			local door = {}
+			
+			door['index'] = ent:EntIndex()
+			door['title'] = ent:GetNWString('title') or ''
+			
+			savegame["doors"][#savegame["doors"] + 1] = door
+		end
+		
 		if ent and ent != NULL and ent:IsValid() and !table.HasValue(self.MapSpecificEntities, ent) then
 			--Msg(ent)
 			--Msg("\n" .. ent:GetClass() .. "\n")
@@ -2481,19 +2491,35 @@ function GM:PreLoadMap(name)
 end
 
 function GM:LoadMap(name)
-	-- Msg('GMS Loading: ' .. name .. "\n")
+	Msg('GMS Loading: ' .. name .. "\n")
 	local savegame = util.KeyValuesToTable(file.Read("GMStranded/Gamesaves/"..name..".txt"))
 	local num = table.Count(savegame["entries"])
 
 	if num == 0 then
 		Msg("This savegame is empty!\n")
 	return end
-
+	
+	Msg(savegame['doors'])
+	
+	if savegame['doors'] != nil then
+		for k,door in pairs(savegame['doors']) do
+			local ent = ents.GetByIndex(door['index'])
+			local title = door['title']
+			
+			if ent:IsValid() and ent:IsDoor() then
+				ent:SetNWBool('notOwnable', true)
+				ent:SetNWString('title', title)
+			end
+		end
+	end
+	
 	self:LoadMapEntity(savegame,num,1)
 end
 
 //Don't load it all at once
 function GM:LoadMapEntity(savegame,max,k)
+	Msg('\nRoger Wilco\n')
+	
 	local entry = savegame["entries"][tostring(k)]
 
 	local ent = ents.Create(entry["class"])
