@@ -60,7 +60,7 @@ function SWEP:PrimaryAttack()
 		return
 	end
 	
-	if trace.Entity:IsOwner(self.Owner) then
+	if trace.Entity:IsOwner(self.Owner) or self.Owner:IsAdmin() then
 		trace.Entity:Fire("lock", "", 0)
 		self.Owner:EmitSound(self.Sound)
 		self.Weapon:SetNextPrimaryFire(CurTime() + 0.3)
@@ -80,7 +80,7 @@ function SWEP:SecondaryAttack()
 		return
 	end
 	
-	if trace.Entity:IsOwner(self.Owner) then
+	if trace.Entity:IsOwner(self.Owner) or self.Owner:IsAdmin() then
 		trace.Entity:Fire("unlock", "", 0)
 		self.Owner:EmitSound(self.Sound)
 		self.Weapon:SetNextSecondaryFire(CurTime() + 0.3)

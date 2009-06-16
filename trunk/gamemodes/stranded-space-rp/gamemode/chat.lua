@@ -222,7 +222,7 @@ function Warrants(ply, text)
 end
 AddChatCommand('/warrants', Warrants)
 
---Money Commands
+-- Money Commands
 function GiveMoney(ply, text)
 	local args = string.Explode(' ', text)
 	local ammount = tonumber(args[2]) or 0
@@ -291,3 +291,157 @@ function DropMoney(ply, text)
 	return ''
 end
 AddChatCommand('/dropmoney', DropMoney)
+
+-- Door Commands
+function AddOwner(ply, text)
+	ply:ChatPrint(ply:Name() .. ': ' .. text)
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
+			return ''
+		end
+	else
+		ply:SendMessage("Aim at a door.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local args = string.Explode(' ', text)
+	local target = FindPlayer(args[2])
+	
+	if not target:IsPlayer() then
+		ply:SendMessage("Player not found.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	tr.Entity:AddOwner(target)
+	
+	local msg = 'Added ' .. target:Name() .. ' to door.'
+	ply:SendMessage(msg,3,Color(255,255,255,255))
+	ply:PrintMessage(HUD_PRINTCONSOLE, msg)
+	
+	return ''
+end
+AddChatCommand('/addowner', AddOwner)
+
+function RemoveOwner(ply, text)
+	ply:ChatPrint(ply:Name() .. ': ' .. text)
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
+			return ''
+		end
+	else
+		ply:SendMessage("Aim at a door.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local args = string.Explode(' ', text)
+	local target = FindPlayer(args[2])
+	
+	if not target:IsPlayer() then
+		ply:SendMessage("Player not found.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	tr.Entity:RemoveOwner(target)
+	
+	local msg = 'Removed ' .. target:Name() .. ' from door.'
+	ply:SendMessage(msg,3,Color(255,255,255,255))
+	ply:PrintMessage(HUD_PRINTCONSOLE, msg)
+	
+	return ''
+end
+AddChatCommand('/removeowner', RemoveOwner)
+
+function Owners(ply, text)
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if not tr.Entity:IsOwner(ply) or not ply:IsAdmin() then
+			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
+			return ''
+		end
+	else
+		ply:SendMessage("Aim at a door.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local output = 'Door Owners:'
+	local num = tr.Entity:GetNWInt("OwnerNum") or 0
+	local owner = nil
+	for n = 1, num do
+		owner = player.GetByID(tr.Entity:GetNWInt("Owner" .. n))
+		if owner:IsPlayer() then
+			output = output .. '\n' .. owner:Name()
+		end
+	end
+	
+	ply:ChatPrint(output)
+	ply:PrintMessage(2, output)
+	return ''
+end
+AddChatCommand('/warrants', Warrants)
+
+function SetTitle(ply, text)
+	ply:ChatPrint(ply:Name() .. ': ' .. text)
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
+			return ''
+		end
+	else
+		ply:SendMessage("Aim at a door.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local args = string.Explode(' ', text)
+	
+	local i, j = string.find(text, args[2])
+	local title = string.sub(text, i, string.len(text))
+	
+	if string.len(title) > 50 then
+		ply:SendMessage("Titles are limited to 50 characters.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	tr.Entity:SetNWString('title', title)
+	ply:SendMessage('Door title set.',3,Color(255,255,255,255))
+	
+	return ''
+end
+AddChatCommand('/title', SetTitle)
+
+function SetUnownable(ply, text)	
+	local tr = ply:TraceFromEyes(150)
+	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		if not ply:IsAdmin() then
+			ply:SendMessage("You must be an admin to use this command.",3,Color(200,0,0,255))
+			return ''
+		end
+	else
+		ply:SendMessage("Aim at a door.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local unownable = tr.Entity:GetNWBool('notOwnable') or false
+	if unownable then
+		tr.Entity:SetNWBool('notOwnable', false)
+		ply:SendMessage('Door is now ownable.',3,Color(255,255,255,255))
+	else
+		tr.Entity:SetNWBool('notOwnable', true)
+		ply:SendMessage('Door is now unownable.',3,Color(255,255,255,255))
+		
+		local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
+		if owner:IsPlayer() then
+			tr.Entity:RemoveOwner(owner)
+		end
+	end
+	
+	return ''
+end
+AddChatCommand('/unownable', SetUnownable)

@@ -546,12 +546,11 @@ hook.Add("HUDPaint", "DrawMoney", DrawMoney)
 
 -- Door HUD
 function DoorHUD()
-	local msg = 'blarg'
-	
 	local tr = LocalPlayer():TraceFromEyes(150)
 	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
+		local msg = ''
 		if tr.Entity:GetNWBool('notOwnable') then
-			local msg = 'Unownable'
+			msg = 'Unownable'
 		else
 			local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
 			if owner:IsPlayer() then
@@ -560,8 +559,10 @@ function DoorHUD()
 				msg = 'Press F4 to rent.'
 			end
 		end
-		
 		draw.SimpleTextOutlined(msg, "ScoreboardText", ScrW() / 2, ScrH() / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+		
+		local title = tr.Entity:GetNWString('title') or ''
+		draw.SimpleTextOutlined(title, "ScoreboardText", ScrW() / 2, (ScrH() / 2) - 20, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
 	end
 end
 hook.Add("HUDPaint", "DoorHUD", DoorHUD)
