@@ -1187,8 +1187,9 @@ function GM:PlayerInitialSpawn(ply)
 	end
 
 	//Character loading
-	if file.Exists("GMStranded/Saves/"..ply:UniqueID()..".txt") then
-		local tbl = util.KeyValuesToTable(file.Read("GMStranded/Saves/"..ply:UniqueID()..".txt"))
+	local steam = string.Replace(ply:SteamID(), ':', '-')
+	if file.Exists("GMStranded/Saves/"..steam..".txt") then
+		local tbl = util.KeyValuesToTable(file.Read("GMStranded/Saves/"..steam..".txt"))
 
 		if tbl["skills"] then
 		for k,v in pairs(tbl["skills"]) do
@@ -1362,12 +1363,12 @@ function GM:ShutDown()
          end
 end
 
-function GM.SaveCharacter(ply,cmd,args)
-	
-end
-concommand.Add("gms_savecharacter",GM.SaveCharacter)
+-- function GM.SaveCharacter(ply,cmd,args)
+	-- sql.Query("CREATE TABLE IF NOT EXISTS ssrp_player_info('steam' TEXT NOT NULL, 'name' TEXT NOT NULL, 'date' TEXT NOT NULL, 'money' INTEGER NOT NULL, PRIMARY KEY('steam'));")
+	-- sql.Query("CREATE TABLE IF NOT EXISTS ssrp_player_skills('steam' TEXT NOT NULL, 'name' TEXT NOT NULL, 'date' TEXT NOT NULL, 'money' INTEGER NOT NULL, PRIMARY KEY('steam'));")
+-- end
 
-function GM.OldSaveCharacter(ply,cmd,args)
+function GM.SaveCharacter(ply,cmd,args)
 	if !file.IsDir("GMStranded") then file.CreateDir("GMStranded") end
 	if !file.IsDir("GMStranded/Saves") then file.CreateDir("GMStranded/Saves") end
 
@@ -1390,10 +1391,12 @@ function GM.OldSaveCharacter(ply,cmd,args)
 	for k,v in pairs(ply.FeatureUnlocks) do
 		tbl["unlocks"][k] = v
 	end
-
-	file.Write("GMStranded/Saves/"..ply:UniqueID()..".txt",util.TableToKeyValues(tbl))
+	
+	local steam = string.Replace(ply:SteamID(), ':', '-')
+	file.Write("GMStranded/Saves/"..steam..".txt",util.TableToKeyValues(tbl))
 	ply:SendMessage("Saved character!",3,Color(255,255,255,255))
 end
+concommand.Add("gms_savecharacter",GM.SaveCharacter)
 
 function GM.SaveAllCharacters(ply)
          if !ply:IsAdmin() then 
@@ -2491,15 +2494,13 @@ function GM:PreLoadMap(name)
 end
 
 function GM:LoadMap(name)
-	Msg('GMS Loading: ' .. name .. "\n")
+	-- Msg('GMS Loading: ' .. name .. "\n")
 	local savegame = util.KeyValuesToTable(file.Read("GMStranded/Gamesaves/"..name..".txt"))
 	local num = table.Count(savegame["entries"])
 
 	if num == 0 then
 		Msg("This savegame is empty!\n")
 	return end
-	
-	Msg(savegame['doors'])
 	
 	if savegame['doors'] != nil then
 		for k,door in pairs(savegame['doors']) do
@@ -2518,8 +2519,6 @@ end
 
 //Don't load it all at once
 function GM:LoadMapEntity(savegame,max,k)
-	Msg('\nRoger Wilco\n')
-	
 	local entry = savegame["entries"][tostring(k)]
 
 	local ent = ents.Create(entry["class"])
