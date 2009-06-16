@@ -155,7 +155,7 @@ AddChatCommand('/mobboss', MobBoss)
 
 -- Warranting Commands
 function Warrant(ply, text)
-	if not ply:Team() == 6 or ply:IsAdmin() then
+	if not ply:Team() == 6 and not ply:IsAdmin() then
 		ply:SendMessage('You must be the Mayor to use this command.', 3, Color(200,0,0,255))
 		return ''
 	end
@@ -181,7 +181,7 @@ end
 AddChatCommand('/warrant', Warrant)
 
 function UnWarrant(ply, text)
-	if not ply:Team() == 6 or ply:IsAdmin() then
+	if not ply:Team() == 6 and not ply:IsAdmin() then
 		ply:SendMessage('You must be the Mayor to use this command.', 3, Color(200,0,0,255))
 		return ''
 	end
@@ -240,7 +240,7 @@ function GiveMoney(ply, text)
 	
 	local tr = ply:TraceFromEyes(150)
 	local target = tr.Entity
-	if not target:IsPlayer() then
+	if not target or not target:IsPlayer() then
 		ply:SendMessage("Aim at a player to give money to.",3,Color(200,0,0,255))
 		return ''
 	end
@@ -292,13 +292,36 @@ function DropMoney(ply, text)
 end
 AddChatCommand('/dropmoney', DropMoney)
 
+function PrintMoney(ply, text)
+	local args = string.Explode(' ', text)
+	local ammount = tonumber(args[2]) or 0
+	
+	if not ply:IsAdmin() then
+		ply:SendMessage("You must be an admin to use this command.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.HitWorld then
+		local ent = ents.Create("GMS_Money")
+		ent:SetPos(tr.HitPos)
+		ent:Spawn()
+		ent:SetAmmount(ammount)
+	else
+		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
+	end
+	
+	return ''
+end
+AddChatCommand('/printmoney', PrintMoney)
+
 -- Door Commands
 function AddOwner(ply, text)
 	ply:ChatPrint(ply:Name() .. ': ' .. text)
 	
 	local tr = ply:TraceFromEyes(150)
 	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
-		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply and not ply:IsAdmin() then
 			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
 			return ''
 		end
@@ -310,7 +333,7 @@ function AddOwner(ply, text)
 	local args = string.Explode(' ', text)
 	local target = FindPlayer(args[2])
 	
-	if not target:IsPlayer() then
+	if not target or not target:IsPlayer() then
 		ply:SendMessage("Player not found.",3,Color(200,0,0,255))
 		return ''
 	end
@@ -330,7 +353,7 @@ function RemoveOwner(ply, text)
 	
 	local tr = ply:TraceFromEyes(150)
 	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
-		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply and not ply:IsAdmin() then
 			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
 			return ''
 		end
@@ -342,7 +365,7 @@ function RemoveOwner(ply, text)
 	local args = string.Explode(' ', text)
 	local target = FindPlayer(args[2])
 	
-	if not target:IsPlayer() then
+	if not target or not target:IsPlayer() then
 		ply:SendMessage("Player not found.",3,Color(200,0,0,255))
 		return ''
 	end
@@ -360,7 +383,7 @@ AddChatCommand('/removeowner', RemoveOwner)
 function Owners(ply, text)
 	local tr = ply:TraceFromEyes(150)
 	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
-		if not tr.Entity:IsOwner(ply) or not ply:IsAdmin() then
+		if not tr.Entity:IsOwner(ply) and not ply:IsAdmin() then
 			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
 			return ''
 		end
@@ -383,14 +406,14 @@ function Owners(ply, text)
 	ply:PrintMessage(2, output)
 	return ''
 end
-AddChatCommand('/warrants', Warrants)
+AddChatCommand('/owners', Owners)
 
 function SetTitle(ply, text)
 	ply:ChatPrint(ply:Name() .. ': ' .. text)
 	
 	local tr = ply:TraceFromEyes(150)
 	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
-		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply or not ply:IsAdmin() then
+		if player.GetByID( tr.Entity:GetNWInt('Owner1') ) != ply and not ply:IsAdmin() then
 			ply:SendMessage("You don't own this door.",3,Color(200,0,0,255))
 			return ''
 		end

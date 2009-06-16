@@ -127,10 +127,15 @@ function GM:ShowSpare2( ply )
 			if tr.Entity:GetNWBool('notOwnable') then -- Door not ownable.
 				ply:SendMessage("Door is unownable!",3,Color(200,0,0,255))
 			else -- Buy the door.
-				tr.Entity:AddOwner(ply)
-				
 				local plyMoney = ply:GetNWInt('money')
-				ply:SetNWInt('money', plyMoney - 100)
+				plyMoney = plyMoney - 100
+				
+				if plyMoney < 0 then
+					ply:SendMessage("You don't have enough money!",3,Color(200,0,0,255))
+				else
+					ply:SetNWInt('money', plyMoney)
+					tr.Entity:AddOwner(ply)
+				end
 			end
 		end
 	end
@@ -641,18 +646,26 @@ function EntityMeta:RemoveOwner(ply)
 			self:SetNWInt("Owner" .. i, -1)
 		end
 		self:SetNWInt('OwnerNum', 0)
+		self:SetNWString('title', '')
 	end
 end
 
 function EntityMeta:IsOwner(ply)
 	local num = self:GetNWInt("OwnerNum") or 0
+	-- Msg('OwnerNum: ' .. tostring(num) .. '\n')
 	
 	for n = 1, num do
+		-- Msg('Iteration: ' .. tostring(n) .. '\n')
+		-- Msg('ply:EntIndex: ' .. tostring(ply:EntIndex()) .. '\n')
+		-- Msg('Owner' .. tostring(n) .. ': ' .. tostring(ply:EntIndex()) .. '\n')
 		if ply:EntIndex() == self:GetNWInt("Owner" .. n) then
+			-- Msg(ply:Name() .. ' is owner' .. '\n')
 			return true
 		end
-		return false
 	end
+	
+	-- Msg(ply:Name() .. ' is not owner' .. '\n')
+	return false
 end
 
 /*---------------------------------------------------------

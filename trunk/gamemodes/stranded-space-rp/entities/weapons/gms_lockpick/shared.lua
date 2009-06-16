@@ -73,7 +73,7 @@ function SWEP:PrimaryAttack()
             local data = {}
             data.Entity = tr.Entity
 
-            data.Chance = 5
+            data.Chance = 2
             -- data.MinAmount = 1
             -- data.MaxAmount = 5
 
