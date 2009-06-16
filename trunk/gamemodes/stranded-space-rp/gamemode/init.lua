@@ -1363,6 +1363,11 @@ function GM:ShutDown()
 end
 
 function GM.SaveCharacter(ply,cmd,args)
+	
+end
+concommand.Add("gms_savecharacter",GM.SaveCharacter)
+
+function GM.OldSaveCharacter(ply,cmd,args)
 	if !file.IsDir("GMStranded") then file.CreateDir("GMStranded") end
 	if !file.IsDir("GMStranded/Saves") then file.CreateDir("GMStranded/Saves") end
 
@@ -1389,8 +1394,6 @@ function GM.SaveCharacter(ply,cmd,args)
 	file.Write("GMStranded/Saves/"..ply:UniqueID()..".txt",util.TableToKeyValues(tbl))
 	ply:SendMessage("Saved character!",3,Color(255,255,255,255))
 end
-
-concommand.Add("gms_savecharacter",GM.SaveCharacter)
 
 function GM.SaveAllCharacters(ply)
          if !ply:IsAdmin() then 
@@ -2191,8 +2194,8 @@ function GM.UseKeyHook(ply,key)
                elseif ent:IsTreeModel() then
                   ply:DoProcess("SproutCollect",5)
                
-               elseif cls == "GMS_ResourceDrop" then
-                  ply:PickupResourceEntity(ent)
+               --elseif cls == "GMS_ResourceDrop" then
+                 -- ply:PickupResourceEntity(ent)
                elseif ent:IsOnFire() then
                   ply:OpenCombiMenu("Cooking")
                end
@@ -2246,30 +2249,30 @@ function GM.UseKeyHook(ply,key)
          end
 end
 
-function PlayerMeta:PickupResourceEntity(ent)
+-- function PlayerMeta:PickupResourceEntity(ent)
           
-          local int = ent.Amount
-          local room = self.MaxResources - self:GetAllResources()
+          -- local int = ent.Amount
+          -- local room = self.MaxResources - self:GetAllResources()
 
-          if room <= 0 then
-             self:SendMessage("You can't carry anymore!",3,Color(200,0,0,255))
-          return end
+          -- if room <= 0 then
+             -- self:SendMessage("You can't carry anymore!",3,Color(200,0,0,255))
+          -- return end
 
-          if room < int then
-             int = room
-          end
+          -- if room < int then
+             -- int = room
+          -- end
 
-          ent.Amount = ent.Amount - int
+          -- ent.Amount = ent.Amount - int
 
-          if ent.Amount <= 0 then
-             ent:Fadeout()
-          else
-             ent:SetResourceDropInfo(ent.Type,ent.Amount)
-          end
+          -- if ent.Amount <= 0 then
+             -- ent:Fadeout()
+          -- else
+             -- ent:SetResourceDropInfo(ent.Type,ent.Amount)
+          -- end
 
-          self:IncResource(ent.Type,int)
-          self:SendMessage("Picked up "..ent.Type.." ("..int.."x)",4,Color(10,200,10,255))
-end
+          -- self:IncResource(ent.Type,int)
+          -- self:SendMessage("Picked up "..ent.Type.." ("..int.."x)",4,Color(10,200,10,255))
+-- end
 
 hook.Add("KeyPress","GMS_UseKeyHook",GM.UseKeyHook)
 
