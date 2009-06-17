@@ -596,6 +596,22 @@ end
 function GMS.Jail(ply)
 	if not ply.Warranted then return end
 	
+	local class = ''
+	for k,v in pairs(ply:GetWeapons()) do
+		class = v:GetClass()
+		if class == 'gms_lockpick' or not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
+			ply:DropWeapon(v)
+			
+			if table.HasValue(ply.Tools, class) then
+				for k,v in ipairs(ply.Tools) do
+					if v == class then
+						table.remove(ply.Tools, k)
+					end
+				end
+			end
+		end
+	end
+	
 	ply.Jailed = true
 	for k,ent in pairs(ents.GetAll()) do
 		if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == 'jail')) then
@@ -1327,7 +1343,6 @@ function GM:EntityTakeDamage( ent, inflictor, attacker, amount )
 	if attacker:IsPlayer() and ent:IsPlayer() and ent:Alive() and amount >= ent:Health() then -- The player was killed by a player.
 		local class = ent:GetActiveWeapon():GetClass()
 		if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
-			Msg('Poke\n')
 			self.DropWeapon(ent)
 		end
 	end
@@ -1336,14 +1351,13 @@ end
 function GM:PlayerCanPickupWeapon(ply, wep)
 	local class = wep:GetClass()
 	
-	if not table.HasValue(GMS.NoDrop, class) and not table.HasValue(ply.Tools, class) then
-		table.insert(ply.Tools, class)
-	end
-	
 	if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) and ply:Team() == 6 then
 		-- ply:SendMessage("You're the Mayor! Why would you need a weapon? >:)", 3, Color(200,0,0,255))
 		return false
 	else
+		if not table.HasValue(GMS.NoDrop, class) and not table.HasValue(ply.Tools, class) then
+			table.insert(ply.Tools, class)
+		end
 		return true
 	end
 end

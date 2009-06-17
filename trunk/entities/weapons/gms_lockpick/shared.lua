@@ -54,31 +54,38 @@ end
 	PrimaryAttack
 ---------------------------------------------------------*/
 function SWEP:PrimaryAttack()
-         if CLIENT then return end
-         self.Weapon:SetNextPrimaryFire(CurTime() + 1)
-         self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
-         self.Owner:EmitSound(Sound("weapons/iceaxe/iceaxe_swing1.wav"))
+	if CLIENT then return end
+	
+	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
+	
+	if self.Owner:Team() != 3 then
+		self.Owner:SendMessage("Only gangsters can pick locks.", 3, Color(200,0,0,255))
+		return
+	end
+	
+	self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
+	self.Owner:EmitSound(Sound("weapons/iceaxe/iceaxe_swing1.wav"))
 
-         local trace = {}
-         trace.start = self.Owner:GetShootPos()
-         trace.endpos = trace.start + (self.Owner:GetAimVector() * 150)
-         trace.filter = self.Owner
+	local trace = {}
+	trace.start = self.Owner:GetShootPos()
+	trace.endpos = trace.start + (self.Owner:GetAimVector() * 150)
+	trace.filter = self.Owner
 
-         local tr = util.TraceLine(trace)
-         
-         if !tr.HitNonWorld then return end
-         if !tr.Entity then return end
+	local tr = util.TraceLine(trace)
+	
+	if !tr.HitNonWorld then return end
+	if !tr.Entity then return end
 
-         if tr.Entity:IsDoor() then
-            local data = {}
-            data.Entity = tr.Entity
+	if tr.Entity:IsDoor() then
+		local data = {}
+		data.Entity = tr.Entity
 
-            data.Chance = 2
-            -- data.MinAmount = 1
-            -- data.MaxAmount = 5
+		data.Chance = 2
+		-- data.MinAmount = 1
+		-- data.MaxAmount = 5
 
-            self.Owner:DoProcess("Lockpicking",2,data)
-         end
+		self.Owner:DoProcess("Lockpicking",2,data)
+	end
 end
 
 /*---------------------------------------------------------

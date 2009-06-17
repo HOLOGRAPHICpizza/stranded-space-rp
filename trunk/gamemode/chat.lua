@@ -72,7 +72,7 @@ function PersonalMessage(ply, text)
 	target:ChatPrint(msg)
 	target:PrintMessage(2, msg)
 	
-	ply:ChatPrint(ply:Name() .. ': ' .. text)
+	ply:ChatPrint('PM to' .. target:Name() .. ': ' .. string.sub(text, j+2, string.len(text)))
 	
 	Msg('PM from ' .. ply:Name() .. ' to ' .. target:Name() .. ': ' .. string.sub(text, j+2, string.len(text)) .. '\n')
 	
@@ -131,6 +131,20 @@ AddChatCommand('/doctor', Doctor)
 
 function Mayor(ply, text)
 	if (team.NumPlayers(6) < 1) then
+		local class = ''
+		for k,v in pairs(ply:GetWeapons()) do
+			class = v:GetClass()
+			if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
+				if table.HasValue(ply.Tools, class) then
+					for k,v in ipairs(ply.Tools) do
+						if v == class then
+							table.remove(ply.Tools, k)
+						end
+					end
+				end
+			end
+		end
+		
 		ply:SetTeam(6)
 		ply:Kill()
 		ply:SendMessage('You are now the Mayor!',3,Color(255,255,255,255))
