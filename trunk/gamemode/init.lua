@@ -639,6 +639,36 @@ function GMS.UnJail(ply)
 	end
 end
 
+GMS.MayorHitActive = false
+
+function GMS.MayorHit()
+	GMS.MayorHitActive = true
+	timer.Simple(300, GMS.MayorUnHit)
+end
+
+function GMS.MayorUnHit()
+	GMS.MayorHitActive = false
+	local pls = player.GetAll()
+	for k, v in pairs(pls) do
+		v:SendMessage('The hit on the Mayor has expired.', 10, Color(255,255,255,255))
+	end
+end
+
+GMS.MobBossHitActive = false
+
+function GMS.MobBossHit()
+	GMS.MobBossHitActive = true
+	timer.Simple(300, GMS.MobBossUnHit)
+end
+
+function GMS.MobBossUnHit()
+	GMS.MobBossHitActive = false
+	local pls = player.GetAll()
+	for k, v in pairs(pls) do
+		v:SendMessage('The hit on the Mob Boss has expired.', 10, Color(255,255,255,255))
+	end
+end
+
 function EntityMeta:AddOwner(ply)
 	local num = self:GetNWInt("OwnerNum") or 0
 	num = num + 1
@@ -1344,6 +1374,38 @@ function GM:EntityTakeDamage( ent, inflictor, attacker, amount )
 		local class = ent:GetActiveWeapon():GetClass()
 		if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
 			self.DropWeapon(ent)
+		end
+		
+		if GMS.MayorHitActive and attacker:Team() == 3 and ent:Team() == 6 then
+			ent:SetTeam(1)
+			ent:Kill()
+			ent:SendMessage('You are now a Citizen! :)',3,Color(255,255,255,255))
+			
+			local class = ''
+			for k,v in pairs(attacker:GetWeapons()) do
+				class = v:GetClass()
+				if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
+					if table.HasValue(attacker.Tools, class) then
+						for k,v in ipairs(attacker.Tools) do
+							if v == class then
+								table.remove(attacker.Tools, k)
+							end
+						end
+					end
+				end
+			end
+			
+			attacker:SetTeam(6)
+			attacker:Kill()
+			attacker:SendMessage('You are now the Mayor!',3,Color(255,255,255,255))
+		elseif GMS.MobBossHitActive and attacker:Team() == 1 and ent:Team() == 7 then
+			ent:SetTeam(3)
+			ent:Kill()
+			ent:SendMessage('You are now a Gangster.',3,Color(255,255,255,255))
+			
+			attacker:SetTeam(7)
+			attacker:Kill()
+			attacker:SendMessage('You are now the Mob Boss!',3,Color(255,255,255,255))
 		end
 	end
 end

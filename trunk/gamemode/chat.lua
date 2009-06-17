@@ -482,3 +482,35 @@ function SetUnownable(ply, text)
 	return ''
 end
 AddChatCommand('/unownable', SetUnownable)
+
+-- Hit Commands
+function IssueHit(ply, text)	
+	if ply:Team() == 7 then
+		if GMS.MayorHitActive then
+			ply:SendMessage('There is already a hit on the Mayor!', 3, Color(200,0,0,255))
+			return ''
+		end
+		
+		GMS.MayorHit()
+		local pls = player.GetAll()
+		for k, v in pairs(pls) do
+			v:SendMessage(ply:Name() .. ' has issued a hit on the Mayor!', 10, Color(255,255,255,255))
+		end
+	elseif ply:Team() == 6 then
+		if GMS.MobBossHitActive then
+			ply:SendMessage('There is already a hit on the Mob Boss!', 3, Color(200,0,0,255))
+			return ''
+		end
+		
+		GMS.MobBossHit()
+		local pls = player.GetAll()
+		for k, v in pairs(pls) do
+			v:SendMessage(ply:Name() .. ' has issued a hit on the Mob Boss!', 10, Color(255,255,255,255))
+		end
+	else
+		ply:SendMessage('You must be the Mayor or Mob Boss to use this command.', 3, Color(200,0,0,255))
+	end
+	
+	return ''
+end
+AddChatCommand('/hit', IssueHit)
