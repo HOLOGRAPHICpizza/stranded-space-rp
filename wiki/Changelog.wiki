@@ -25,3 +25,5 @@
   * Added chat command system.
   * Added Money / Salary system.
   * Added Door System
+  * Added weapon keeping / dropping.
+  * Added Hit Calling System
