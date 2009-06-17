@@ -738,7 +738,7 @@ function GM.ReproduceTrees()
                    if num == 1 then
                       local nearby = {}
                       for k,v in pairs(ents.FindInSphere(ent:GetPos(),50)) do
-                          if v:GetClass() == "GMS_Seed" or v:IsProp() then
+                          if v:GetClass() == "gms_seed" or v:IsProp() then
                              table.insert(nearby,v)
                           end
                       end
@@ -1571,7 +1571,7 @@ function GM.PlantGrain(ply,cmd,args)
             local nearby = false
             
             for k,v in pairs(ents.FindInSphere(tr.HitPos,25)) do
-                if v:IsGrainModel() or v:IsProp() or v:GetClass() == "GMS_Seed" then
+                if v:IsGrainModel() or v:IsProp() or v:GetClass() == "gms_seed" then
                    nearby = true
                 end
             end
@@ -1608,7 +1608,7 @@ function GM.PlantBush(ply,cmd,args)
             local nearby = false
             
             for k,v in pairs(ents.FindInSphere(tr.HitPos,25)) do
-                if v:IsGrainModel() or v:IsProp() or v:GetClass() == "GMS_Seed" then
+                if v:IsGrainModel() or v:IsProp() or v:GetClass() == "gms_seed" then
                    nearby = true
                 end
             end
@@ -2331,8 +2331,8 @@ function GM.UseKeyHook(ply,key)
                elseif ent:IsTreeModel() then
                   ply:DoProcess("SproutCollect",5)
                
-               --elseif cls == "GMS_ResourceDrop" then
-                 -- ply:PickupResourceEntity(ent)
+               elseif cls == "gms_resourcedrop" then
+                 ply:PickupResourceEntity(ent)
                elseif ent:IsOnFire() then
                   ply:OpenCombiMenu("Cooking")
                end
@@ -2386,30 +2386,30 @@ function GM.UseKeyHook(ply,key)
          end
 end
 
--- function PlayerMeta:PickupResourceEntity(ent)
+function PlayerMeta:PickupResourceEntity(ent)
           
-          -- local int = ent.Amount
-          -- local room = self.MaxResources - self:GetAllResources()
+          local int = ent.Amount
+          local room = self.MaxResources - self:GetAllResources()
 
-          -- if room <= 0 then
-             -- self:SendMessage("You can't carry anymore!",3,Color(200,0,0,255))
-          -- return end
+          if room <= 0 then
+             self:SendMessage("You can't carry anymore!",3,Color(200,0,0,255))
+          return end
 
-          -- if room < int then
-             -- int = room
-          -- end
+          if room < int then
+             int = room
+          end
 
-          -- ent.Amount = ent.Amount - int
+          ent.Amount = ent.Amount - int
 
-          -- if ent.Amount <= 0 then
-             -- ent:Fadeout()
-          -- else
-             -- ent:SetResourceDropInfo(ent.Type,ent.Amount)
-          -- end
+          if ent.Amount <= 0 then
+             ent:Fadeout()
+          else
+             ent:SetResourceDropInfo(ent.Type,ent.Amount)
+          end
 
-          -- self:IncResource(ent.Type,int)
-          -- self:SendMessage("Picked up "..ent.Type.." ("..int.."x)",4,Color(10,200,10,255))
--- end
+          self:IncResource(ent.Type,int)
+          self:SendMessage("Picked up "..ent.Type.." ("..int.."x)",4,Color(10,200,10,255))
+end
 
 hook.Add("KeyPress","GMS_UseKeyHook",GM.UseKeyHook)
 

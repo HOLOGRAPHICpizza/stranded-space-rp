@@ -58,7 +58,7 @@ function SWEP:PrimaryAttack()
 	
 	self.Weapon:SetNextPrimaryFire(CurTime() + 1)
 	
-	if self.Owner:Team() != 3 then
+	if self.Owner:Team() != 3 and self.Owner:Team() != 7 then
 		self.Owner:SendMessage("Only gangsters can pick locks.", 3, Color(200,0,0,255))
 		return
 	end

@@ -2,8 +2,8 @@ ENT.Type = "Anim"
 ENT.Base = "base_gmodentity"
 
 ENT.PrintName = "Resources" --The name of the SENT.
-ENT.Author = "jA_cOp" --Your name.
-ENT.Contact = "jakob_oevrum@hotmail.com" --EMail address.
+ENT.Author = "Stranded Team" --Your name.
+ENT.Contact = "" --EMail address.
 ENT.Purpose = "Pick up to gain resources." --The purpose of this SENT.
 ENT.Instructions = "Press use to pick up." --Instructions
 

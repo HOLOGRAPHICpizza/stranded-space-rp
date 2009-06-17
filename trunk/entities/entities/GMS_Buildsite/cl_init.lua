@@ -3,7 +3,8 @@ include("shared.lua")
 --Called when it's time to draw the entity.
 --Return: Nothing
 function ENT:Draw()
-         self.Entity:DrawModel()
+    self.Entity:DrawModel()
+	self.Entity:SetColor(90, 167, 243, 255)
 end
 
 --Called when the SENT is spawned

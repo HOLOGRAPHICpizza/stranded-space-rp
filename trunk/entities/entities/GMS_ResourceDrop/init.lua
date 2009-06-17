@@ -10,47 +10,19 @@ end
 
 --Called when the SENT is spawned
 --Return: Nothing
-
 function ENT:Initialize()
-	self.Entity:SetModel("models/items/item_item_crate.mdl")
-
-	self.Entity:PhysicsInit( SOLID_VPHYSICS )
+    self.Entity:SetModel("models/items/item_item_crate.mdl")
+ 	self.Entity:PhysicsInit( SOLID_VPHYSICS )
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	self.Entity:SetSolid( SOLID_VPHYSICS )
-
-	self.Entity:SetColor(255,255,255,255)
-
-	self.Entity.Type = "Resource"
-	self.Entity.Amount = 0
+ 	self.Entity:SetColor(255,255,255,255)
+ 	self.Entity.Type = "Resource"
+ 	self.Entity.Amount = 0
 end
 
 function ENT:SetContents(resource, amount)
 	self.Entity.Type = resource
-	self.Entity.Amount = amount
-end
-
-function ENT:Use( ply, caller )
-	if ( ply:IsPlayer() ) then
-		-- Get max increase ammount.
-		local max = ply.MaxResources - ply:GetAllResources()
-		
-		-- Get increase ammount.
-		inc = self.Entity.Amount
-		if (inc > max) then
-			inc = inc - max
-		end
-		
-		-- Give resources to player.
-		ply:IncResource(self.Entity.Type,inc)
-		
-		-- Take resources from box.
-		self.Entity.Amount = self.Entity.Amount - inc
-		
-		-- Remove box if empty.
-		if (self.Entity.Amount <= 0) then
-			self.Entity:Remove()
-		end
-	end
+ 	self.Entity.Amount = amount
 end
 
 function ENT:AcceptInput(input, ply)
@@ -78,8 +50,14 @@ end
 
 --Called when an entity starts touching this SENT.
 --Return: Nothing
-function ENT:StartTouch(entEntity)
-end
+-- function ENT:StartTouch(entEntity)
+	-- if entEntity:GetClass() == "gms_resourcedrop" and entEntity.Type == self.Entity.Type then
+		-- big_gms_combineresource(self,entEntity)
+	-- end
+	-- if entEntity:GetClass() == "gms_buildsite" and (entEntity.Costs[self.Entity.Type] != nil and entEntity.Costs[self.Entity.Type] > 0) then
+		-- gms_addbuildsiteresource(self,entEntity)
+	-- end
+-- end
 
 --Called when the SENT thinks.
 --Return: Nothing
