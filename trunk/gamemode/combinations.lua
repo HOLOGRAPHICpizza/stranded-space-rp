@@ -433,7 +433,7 @@ GMS.RegisterCombi("Burger", COMBI, "Cooking")
 
 /*---------------------------------------------------------
 
-  Weapons crafting
+  Tool crafting
 
 ---------------------------------------------------------*/
 /*---------------------------------------------------------
@@ -579,6 +579,23 @@ COMBI.SwepClass = "gms_shovel"
 
 GMS.RegisterCombi("Shovel",COMBI,"Weapons")
 
+-- Lockpick
+local COMBI = {}
+
+COMBI.Name = "Lockpick"
+COMBI.Description = [[This tool can pick locks.
+You need:
+75 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 75
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "gms_lockpick"
+
+GMS.RegisterCombi("Lockpick",COMBI,"Weapons")
+
+-- WEAPONS (The kind that hurt people.)
 /*---------------------------------------------------------
   Crowbar
 ---------------------------------------------------------*/
@@ -597,7 +614,7 @@ COMBI.Req["Iron"] = 30
 COMBI.Texture = "weapons/swep"
 COMBI.SwepClass = "weapon_crowbar"
 
-GMS.RegisterCombi("Crowbar",COMBI,"Weapons")
+GMS.RegisterCombi("Crowbar",COMBI,"Guns")
 
 /*---------------------------------------------------------
   Stunstick

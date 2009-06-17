@@ -24,6 +24,11 @@ function ENT:Initialize()
 	self.Entity.Amount = 0
 end
 
+function ENT:SetContents(resource, amount)
+	self.Entity.Type = resource
+	self.Entity.Amount = amount
+end
+
 function ENT:Use( ply, caller )
 	if ( ply:IsPlayer() ) then
 		-- Get max increase ammount.

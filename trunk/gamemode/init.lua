@@ -1234,7 +1234,28 @@ function GM:PlayerInitialSpawn(ply)
 	end
 
 	//Character loading
+	GMS.LoadCharacter(ply)
+	
+	if !firstPlayerMapLoad then
+		-- Msg('Initial Spawn Load Command sent.\n')
+		-- ply:timer.Simple(4, self.ConCommand, "gms_autoload\n")
+		ply:ConCommand("gms_autoload\n")
+	end
+end
+
+function GMS.LoadCharacter(ply)
+	ply:SetSkill("Survival",0)
+	ply:SetXP("Survival",0)
+	ply.MaxResources = 25
+	ply:SetNWInt('money', 750)
+	
 	local steam = string.Replace(ply:SteamID(), ':', '-')
+	
+	if steam == 'STEAM_ID_PENDING' then
+		timer.Simple(0.5, GMS.LoadCharacter, ply)
+		return
+	end
+	
 	if file.Exists("GMStranded/Saves/"..steam..".txt") then
 		local tbl = util.KeyValuesToTable(file.Read("GMStranded/Saves/"..steam..".txt"))
 
@@ -1270,17 +1291,6 @@ function GM:PlayerInitialSpawn(ply)
 
 		ply:SendMessage("Loaded character successfully.",3,Color(255,255,255,255))
 		ply:SendMessage("Last visited on "..tbl.date..", enjoy your stay.",10,Color(255,255,255,255))
-	else
-		ply:SetSkill("Survival",0)
-		ply:SetXP("Survival",0)
-		ply.MaxResources = 25
-		ply:SetNWInt('money', 750)
-	end
-	
-	if !firstPlayerMapLoad then
-		-- Msg('Initial Spawn Load Command sent.\n')
-		-- ply:timer.Simple(4, self.ConCommand, "gms_autoload\n")
-		ply:ConCommand("gms_autoload\n")
 	end
 end
 
@@ -1456,7 +1466,7 @@ function GM.AutoSaveAllCharacters()
 	
 	timer.Simple(math.Clamp(GetConVarNumber("gms_AutoSaveTime"),1,60) * 60,GM.AutoSaveAllCharacters)
 end
-timer.Simple(1,GM.AutoSaveAllCharacters)
+timer.Simple(120,GM.AutoSaveAllCharacters)
 
 function GM:PlayerDisconnected(ply)
          self.SaveCharacter(ply)
@@ -1764,7 +1774,14 @@ function GM.MakeCombination(ply,cmd,args)
 	if !GMS.Combinations[group][combi] then return end
 
 	local tbl = GMS.Combinations[group][combi]
-
+	
+	-- Restrict lockpicks to the Mob Boss.
+	if combi == 'Lockpick' and ply:Team() != 7 then
+		ply:SendMessage("Only the Mob Boss can make lockpicks.",3,Color(200,0,0,255))
+		ply:CloseCombiMenu()
+		return
+	end
+	
 	//Check for nearby forge/fire etc:
 	if group == "Cooking" then
 		local nearby = false
@@ -1782,7 +1799,7 @@ function GM.MakeCombination(ply,cmd,args)
 		local nearby = false
 		
 		for k,v in pairs(ents.FindInSphere(ply:GetPos(),100)) do
-			if v:GetClass() == "GMS_Workbench" then nearby = true end
+			if v:GetClass() == "gms_workbench" then nearby = true end
 		end
 		
 		if !nearby then

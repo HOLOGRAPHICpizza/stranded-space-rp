@@ -514,3 +514,29 @@ function IssueHit(ply, text)
 	return ''
 end
 AddChatCommand('/hit', IssueHit)
+
+-- Resource Commands
+function MakeResource(ply, text)
+	local args = string.Explode(' ', text)
+	local resource = args[2]
+	local amount = tonumber(args[3]) or 0
+	
+	if not ply:IsAdmin() then
+		ply:SendMessage("You must be an admin to use this command.",3,Color(200,0,0,255))
+		return ''
+	end
+	
+	local tr = ply:TraceFromEyes(150)
+	if tr.HitWorld then
+		local ent = ents.Create("GMS_ResourceDrop")
+		ent:SetPos(tr.HitPos)
+		ent:Spawn()
+		
+		ent:SetContents(resource, amount)
+	else
+		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
+	end
+	
+	return ''
+end
+AddChatCommand('/makeresource', MakeResource)
