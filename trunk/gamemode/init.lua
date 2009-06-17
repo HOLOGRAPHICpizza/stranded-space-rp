@@ -1172,6 +1172,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply.FeatureUnlocks = {}
 	ply.Warranted = false
 	ply.Jailed = false
+	ply.Tools = {}
 	
 	//Admin info, needed clientside
 	if ply:IsAdmin() then
@@ -1308,14 +1309,43 @@ function GM:PlayerLoadout(ply)
 		ply:Give('gms_ram')
 	end
 	
+	-- Tools
+	for k,v in ipairs(ply.Tools) do
+		ply:Give(v)
+	end
 end
 
-function GM:PlayerDeath(ply)
-         self.PlayerWake(ply)
-         
-         for k,v in pairs(ply.Resources) do
-             ply:SetResource(k,0)
-         end
+function GM:PlayerDeath(ply, attacker)
+	self.PlayerWake(ply)
+	
+	for k,v in pairs(ply.Resources) do
+		ply:SetResource(k,0)
+	end
+end
+
+function GM:EntityTakeDamage( ent, inflictor, attacker, amount )
+	if attacker:IsPlayer() and ent:IsPlayer() and ent:Alive() and amount >= ent:Health() then -- The player was killed by a player.
+		local class = ent:GetActiveWeapon():GetClass()
+		if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) then -- It's a bona-fied WEAPON.
+			Msg('Poke\n')
+			self.DropWeapon(ent)
+		end
+	end
+end
+
+function GM:PlayerCanPickupWeapon(ply, wep)
+	local class = wep:GetClass()
+	
+	if not table.HasValue(GMS.NoDrop, class) and not table.HasValue(ply.Tools, class) then
+		table.insert(ply.Tools, class)
+	end
+	
+	if not table.HasValue(GMS.Tools, class) and not table.HasValue(GMS.NoDrop, class) and ply:Team() == 6 then
+		-- ply:SendMessage("You're the Mayor! Why would you need a weapon? >:)", 3, Color(200,0,0,255))
+		return false
+	else
+		return true
+	end
 end
 
 /*---------------------------------------------------------
@@ -1399,15 +1429,15 @@ end
 concommand.Add("gms_savecharacter",GM.SaveCharacter)
 
 function GM.SaveAllCharacters(ply)
-         if !ply:IsAdmin() then 
-            ply:SendMessage("You need admin rights for this!",3,Color(200,0,0,255))
-         return end
-         
-         for k,v in pairs(player.GetAll()) do
-             GAMEMODE.SaveCharacter(v)
-         end
-         
-         ply:SendMessage("Saved characters on all current players.",3,Color(255,255,255,255))
+	if !ply:IsAdmin() then 
+		ply:SendMessage("You need admin rights for this!",3,Color(200,0,0,255))
+	return end
+	
+	for k,v in pairs(player.GetAll()) do
+		GAMEMODE.SaveCharacter(v)
+	end
+	
+	ply:SendMessage("Saved characters on all current players.",3,Color(255,255,255,255))
 end
 
 concommand.Add("gms_admin_saveallcharacters",GM.SaveAllCharacters)
@@ -1567,12 +1597,23 @@ concommand.Add("gms_DrinkBottle",GM.DrinkFromBottle)
 
 ---------------------------------------------------------*/
 function GM.DropWeapon(ply,cmd,args)
-         if !ply:Alive() then return end
-         if ply:GetActiveWeapon():GetClass() == "gms_hands" then
-            ply:SendMessage("You cannot drop your hands!",3,Color(200,0,0,255))
-         else
-            ply:DropWeapon(ply:GetActiveWeapon())
-         end
+	Msg('mo\n')
+	if !ply:Alive() then return end
+	Msg('n\n')
+	
+	local class = ply:GetActiveWeapon():GetClass()
+	
+	if not table.HasValue(GMS.NoDrop, class) then
+		ply:DropWeapon(ply:GetActiveWeapon())
+		
+		if table.HasValue(ply.Tools, class) then
+			for k,v in ipairs(ply.Tools) do
+				if v == class then
+					table.remove(ply.Tools, k)
+				end
+			end
+		end
+	end
 end
 
 concommand.Add("gms_DropWeapon",GM.DropWeapon)

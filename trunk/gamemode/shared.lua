@@ -28,7 +28,29 @@ team.SetUp(5, "Doctors", Color(200, 0, 200, 255)) -- Magenta
 team.SetUp(6, "Mayor", Color(220, 0, 0, 255)) -- Red
 team.SetUp(7, "Mob Boss", Color(60, 60, 60, 255)) -- Dark Grey
 
-//Tables
+-- Tables
+GMS.NoDrop = {
+	'gms_hands',
+	'gms_stunstick',
+	'gms_ram',
+	'gms_arrest',
+	'gms_keys',
+	'weapon_physcannon',
+	'weapon_physgun',
+	'gmod_tool'
+}
+
+GMS.Tools = {
+	"gms_pickaxe",
+	"gms_hatchet",
+	"gms_fishingrod",
+	"gms_fryingpan",
+	"gms_shovel",
+	"gms_strainer",
+	"gms_sickle",
+	"gms_lockpick"
+}
+
 GMS.classModels = {
 	"models/player/group01/male_07.mdl",
 	"models/player/police.mdl",
