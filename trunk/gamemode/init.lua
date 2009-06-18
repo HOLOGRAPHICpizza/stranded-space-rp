@@ -1430,6 +1430,27 @@ function GM:PlayerCanPickupWeapon(ply, wep)
 		if not table.HasValue(GMS.NoDrop, class) and not table.HasValue(ply.Tools, class) then
 			table.insert(ply.Tools, class)
 		end
+		
+		if class == 'weapon_ar2' then
+			ply:Give('item_ammo_ar2_large')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+			ply:Give('item_ammo_ar2_altfire')
+		end
+		
+		if class == 'weapon_crossbow' then
+			ply:Give('item_ammo_crossbow')
+			ply:Give('item_ammo_crossbow')
+			ply:Give('item_ammo_crossbow')
+			ply:Give('item_ammo_crossbow')
+			ply:Give('item_ammo_crossbow')
+		end
+		
 		return true
 	end
 end
@@ -1437,7 +1458,7 @@ end
 /*---------------------------------------------------------
 
   Character saving
-
+  
 ---------------------------------------------------------*/
 function GM.AutoSaveAllCharacters()
 	local GM = GAMEMODE
@@ -1782,6 +1803,12 @@ function GM.MakeCombination(ply,cmd,args)
 		return
 	end
 	
+	if combi == 'Weaponbench' and ply:Team() != 4 then
+		ply:SendMessage("Only Weaponsmiths can make a weaponbench.",3,Color(200,0,0,255))
+		ply:CloseCombiMenu()
+		return
+	end
+	
 	//Check for nearby forge/fire etc:
 	if group == "Cooking" then
 		local nearby = false
@@ -1804,6 +1831,23 @@ function GM.MakeCombination(ply,cmd,args)
 		
 		if !nearby then
 			ply:SendMessage("You need to be close to a workbench!",3,Color(200,0,0,255))
+			ply:CloseCombiMenu()
+		return end
+	elseif group == "Guns" then
+		if ply:Team() != 4 then
+			ply:SendMessage("Only Weaponsmiths can make weapons.",3,Color(200,0,0,255))
+			ply:CloseCombiMenu()
+			return
+		end
+		
+		local nearby = false
+		
+		for k,v in pairs(ents.FindInSphere(ply:GetPos(),100)) do
+			if v:GetClass() == "gms_weaponbench" then nearby = true end
+		end
+		
+		if !nearby then
+			ply:SendMessage("You need to be close to a weaponbench!",3,Color(200,0,0,255))
 			ply:CloseCombiMenu()
 		return end
 	end
@@ -1865,7 +1909,7 @@ function GM.MakeCombination(ply,cmd,args)
 
 		ply:DoProcess("MakeGeneric",time,data)
 
-	elseif group == "Weapons" then
+	elseif group == "Weapons" or group == "Guns" then
 		local data = {}
 		data.Name = tbl.Name
 		data.Class = tbl.SwepClass

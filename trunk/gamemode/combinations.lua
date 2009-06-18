@@ -50,6 +50,28 @@ COMBI.Result = "GMS_Stove"
 COMBI.BuildSiteModel = "models/props_c17/furniturestove001a.mdl"
 
 GMS.RegisterCombi("Stove",COMBI,"Buildings")
+
+/*---------------------------------------------------------
+  Weaponbench
+---------------------------------------------------------*/
+local COMBI = {}
+
+COMBI.Name = "Weaponbench"
+COMBI.Description = [[This table has various fine specialized equipment used in crafting weapons.
+You need:
+30 Iron
+20 Wood
+]]
+
+COMBI.Req = {}
+COMBI.Req["Wood"] = 20
+COMBI.Req["Iron"] = 30
+
+COMBI.Result = "GMS_Weaponbench"
+COMBI.BuildSiteModel = "models/props_wasteland/controlroom_desk001a.mdl"
+
+GMS.RegisterCombi("Weaponbench",COMBI,"Buildings")
+
 /*---------------------------------------------------------
 
   Generic
@@ -602,19 +624,226 @@ GMS.RegisterCombi("Lockpick",COMBI,"Weapons")
 local COMBI = {}
 
 COMBI.Name = "Crowbar"
-COMBI.Description = [[This weapon is initially a tool, but pretty useless for it's original purpose on a stranded Island.
-It works well as a weapon, though.
+COMBI.Description = [[Gordon Freeman's signature face smasher.
 You need:
-30 Iron
+50 Iron
 ]]
 
 COMBI.Req = {}
-COMBI.Req["Iron"] = 30
+COMBI.Req["Iron"] = 50
 
 COMBI.Texture = "weapons/swep"
 COMBI.SwepClass = "weapon_crowbar"
 
 GMS.RegisterCombi("Crowbar",COMBI,"Guns")
+
+-- Glock
+local COMBI = {}
+
+COMBI.Name = "Glock"
+COMBI.Description = [[Comonly used for shooting people in the face.
+You need:
+65 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 65
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_glock"
+
+GMS.RegisterCombi("Glock",COMBI,"Guns")
+
+-- FiveSeven
+local COMBI = {}
+
+COMBI.Name = "FiveSeven"
+COMBI.Description = [[A fairly accurate pistol.
+You need:
+70 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 70
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_fiveseven"
+
+GMS.RegisterCombi("FiveSeven",COMBI,"Guns")
+
+-- Deagle
+local COMBI = {}
+
+COMBI.Name = "Deagle"
+COMBI.Description = [[A very powerful and accurate pistol.
+You need:
+90 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 90
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_deagle"
+
+GMS.RegisterCombi("Deagle",COMBI,"Guns")
+
+-- Mac10
+local COMBI = {}
+
+COMBI.Name = "Mac10"
+COMBI.Description = [[A favorite for drive-bys everywhere.
+You need:
+110
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 110
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_mac10"
+
+GMS.RegisterCombi("Mac10",COMBI,"Guns")
+
+-- MP5
+local COMBI = {}
+
+COMBI.Name = "MP5"
+COMBI.Description = [[A pretty good SMG.
+You need:
+125 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 125
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_mp5"
+
+GMS.RegisterCombi("MP5",COMBI,"Guns")
+
+-- M16
+local COMBI = {}
+
+COMBI.Name = "M16"
+COMBI.Description = [[A pretty good rifle.
+You need:
+145 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 145
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_m4"
+
+GMS.RegisterCombi("M16",COMBI,"Guns")
+
+-- AK-47
+local COMBI = {}
+
+COMBI.Name = "AK-47"
+COMBI.Description = [[AK-47, the very best there is.
+When you absolutely, positively, have to kill every single motherfucker in the room; accept no substitute.
+You need:
+100 Iron
+50 Wood
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 100
+COMBI.Req["Wood"] = 50
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_ak47"
+
+GMS.RegisterCombi("AK-47",COMBI,"Guns")
+
+-- Shotgun
+local COMBI = {}
+
+COMBI.Name = "Shotgun"
+COMBI.Description = [[Good for blowing zombies in half.
+You need:
+145 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 145
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_pumpshotgun"
+
+GMS.RegisterCombi("Shotgun",COMBI,"Guns")
+
+-- Shotgun
+local COMBI = {}
+
+COMBI.Name = "Shotgun"
+COMBI.Description = [[Good for blowing zombies in half.
+You need:
+145 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 145
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_pumpshotgun"
+
+GMS.RegisterCombi("Shotgun",COMBI,"Guns")
+
+-- Para
+local COMBI = {}
+
+COMBI.Name = "Para"
+COMBI.Description = [[Good for pretending to be Rambo.
+You need:
+150 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 150
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_para"
+
+GMS.RegisterCombi("Para",COMBI,"Guns")
+
+-- Crossbow
+local COMBI = {}
+
+COMBI.Name = "Crossbow"
+COMBI.Description = [[For when you need to impale people with superheated rebar from great distances.
+100 Iron
+75 Wood
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 100
+COMBI.Req["Wood"] = 75
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_crossbow"
+
+GMS.RegisterCombi("Crossbow",COMBI,"Guns")
+
+-- AR2
+local COMBI = {}
+
+COMBI.Name = "AR2"
+COMBI.Description = [[A redonkulous gun from the future.
+You need:
+200 Iron
+]]
+
+COMBI.Req = {}
+COMBI.Req["Iron"] = 200
+
+COMBI.Texture = "weapons/swep"
+COMBI.SwepClass = "weapon_ar2"
+
+GMS.RegisterCombi("AR2",COMBI,"Guns")
 
 /*---------------------------------------------------------
   Stunstick

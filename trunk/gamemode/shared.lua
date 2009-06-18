@@ -55,7 +55,7 @@ GMS.classModels = {
 	"models/player/group01/male_07.mdl",
 	"models/player/police.mdl",
 	"models/player/group03/male_07.mdl",
-	"models/player/barney.mdl",
+	"models/player/eli.mdl",
 	"models/player/kleiner.mdl",
 	"models/player/breen.mdl",
 	"models/player/monk.mdl"
