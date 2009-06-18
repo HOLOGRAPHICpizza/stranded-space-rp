@@ -27,3 +27,4 @@
   * Added Door System
   * Added weapon keeping / dropping.
   * Added Hit Calling System
+  * Added weaponbench.
