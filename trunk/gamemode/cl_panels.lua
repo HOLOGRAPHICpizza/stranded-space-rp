@@ -314,6 +314,7 @@ PANEL.Plantables = {}
 PANEL.Plantables["gms_plantmelon"] = "Plant Melon"
 PANEL.Plantables["gms_planttree"] = "Plant Tree"
 PANEL.Plantables["gms_plantgrain"] = "Plant Grain"
+PANEL.Plantables["gms_planthemp"] = "Plant Hemp"
 PANEL.Plantables["gms_plantbush"] = "Plant Berry Bush"
 
 function PANEL:Init()

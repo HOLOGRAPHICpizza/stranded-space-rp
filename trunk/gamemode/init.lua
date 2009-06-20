@@ -505,12 +505,21 @@ function EntityMeta:IsBerryBushModel()
 end
 
 function EntityMeta:IsGrainModel()
-         local mdl = "models/props_foliage/cattails.mdl"
-         if mdl == self:GetModel() or string.gsub(string.lower(mdl),"/","\\") == self:GetModel() then
-            return true
-         end
+	local mdl = "models/props_foliage/cattails.mdl"
+	if mdl == self:GetModel() or string.gsub(string.lower(mdl),"/","\\") == self:GetModel() then
+		return true
+	end
 
-         return false
+	return false
+end
+
+function EntityMeta:IsHempModel()
+	local mdl = "models/props_foliage/bramble001a.mdl"
+	if mdl == self:GetModel() or string.gsub(string.lower(mdl),"/","\\") == self:GetModel() then
+		return true
+	end
+
+	return false
 end
 
 function EntityMeta:IsFoodModel()
@@ -1620,6 +1629,41 @@ end
 
 concommand.Add("gms_plantgrain",GM.PlantGrain)
 
+-- Hemp planting
+function GM.PlantHemp(ply,cmd,args)
+         local tr = ply:TraceFromEyes(150)
+         
+         if tr.HitWorld then
+            local nearby = false
+            
+            for k,v in pairs(ents.FindInSphere(tr.HitPos,25)) do
+                if v:IsHempModel() or v:IsProp() or v:GetClass() == "gms_seed" then
+                   nearby = true
+                end
+            end
+
+            if (tr.MatType == MAT_DIRT or tr.MatType == MAT_GRASS or tr.MatType == MAT_SAND) and !GMS.IsInWater(tr.HitPos) then
+               if ply:GetResource("Hemp_Seeds") >= 1 then
+                  if !nearby then
+                     local data = {}
+                     data.Pos = tr.HitPos
+
+                     ply:DoProcess("PlantHemp",3,data)
+                  else
+                     ply:SendMessage("You need more distance between seeds/props.",3,Color(200,0,0,255))
+                  end
+               else
+                  ply:SendMessage("You need a hemp seed.",3,Color(200,0,0,255))
+               end
+            else
+               ply:SendMessage("You cannot plant on this terrain.",3,Color(200,0,0,255))
+            end
+         else
+            ply:SendMessage("Aim at the ground to plant.",3,Color(200,0,0,255))
+         end
+end
+concommand.Add("gms_planthemp",GM.PlantHemp)
+
 //Berry planting
 function GM.PlantBush(ply,cmd,args)
 
@@ -2350,84 +2394,88 @@ end
   Use Hook
 ---------------------------------------------------------*/
 function GM.UseKeyHook(ply,key)
-         local GM = GAMEMODE
-         if key != IN_USE then return end
+	local GM = GAMEMODE
+	if key != IN_USE then return end
 
-         local tr = ply:TraceFromEyes(150)
+	local tr = ply:TraceFromEyes(150)
 
-         if tr.HitNonWorld then
-            if tr.Entity and !GMS.IsInWater(tr.HitPos) then
-               local ent = tr.Entity
-               local mdl = tr.Entity:GetModel()
-               local cls = tr.Entity:GetClass()
-
-               if ent:IsFoodModel() or cls == "GMS_Food" then
-                  if cls == "GMS_Food" then
-                      ply:SendMessage("Restored "..tostring((ent.Value / 1000) * 100).."% food.",3,Color(10,200,10,255))
-                      ply:SetFood(ply.Hunger + ent.Value)
-                      ent:Fadeout(2)
-                  else
-                      local data = {}
-                      data.Entity = ent
-                      ply:DoProcess("EatFruit",2,data)
-                  end
-               
-               elseif ent:IsTreeModel() then
-                  ply:DoProcess("SproutCollect",5)
-               
-               elseif cls == "gms_resourcedrop" then
-                 ply:PickupResourceEntity(ent)
-               elseif ent:IsOnFire() then
-                  ply:OpenCombiMenu("Cooking")
-               end
-            end
-         elseif tr.HitWorld then
-            for k,v in pairs(ents.FindInSphere(tr.HitPos,100)) do
-                if v:IsGrainModel() then
-                   local data = {}
-                   data.Entity = v
-                   
-                   ply:DoProcess("HarvestGrain",3,data)
-                   return
-                elseif v:IsBerryBushModel() then
-                   local data = {}
-                   data.Entity = v
-                   
-                   ply:DoProcess("HarvestBush",3,data)
-                   return
-                end
-            end
-            
-            if (tr.MatType == MAT_DIRT or tr.MatType == MAT_GRASS or tr.MatType == MAT_SAND) and !GMS.IsInWater(tr.HitPos) then
-               local time = 5
-               if ply:GetActiveWeapon():GetClass() == "gms_shovel" then time = 2 end
-
-               ply:DoProcess("Foraging",time)
-            end
-         elseif !tr.Hit or GMS.IsInWater(tr.HitPos) then
-            local trace = {}
-            trace.start = ply:GetShootPos()
-            trace.endpos = trace.start + (ply:GetAimVector() * 200)
-            trace.mask = MASK_WATER
-
-            local tr2 = util.TraceLine(trace)
-            
-            if tr2.Hit then
-               if ply:WaterLevel() > 0 then
-                  if ply.Thirst < 1000 and ply.Thirst > 950 then
-                     ply.Thirst = 1000
-                     ply:UpdateNeeds()
-                     ply:EmitSound(Sound("ambient/water/water_spray"..math.random(1,3)..".wav"))
-                  elseif ply.Thirst < 950 then
-                     ply.Thirst = ply.Thirst + 50
-                     ply:EmitSound(Sound("ambient/water/water_spray"..math.random(1,3)..".wav"))
-                     ply:UpdateNeeds()
-                  end
-               else
-                  ply:DoProcess("BottleWater",3)
-               end
-            end
-         end
+	if tr.HitNonWorld then
+		if tr.Entity and !GMS.IsInWater(tr.HitPos) then
+			local ent = tr.Entity
+			local mdl = tr.Entity:GetModel()
+			local cls = tr.Entity:GetClass()
+			
+			if ent:IsFoodModel() or cls == "GMS_Food" then
+				if cls == "GMS_Food" then
+					ply:SendMessage("Restored "..tostring((ent.Value / 1000) * 100).."% food.",3,Color(10,200,10,255))
+					ply:SetFood(ply.Hunger + ent.Value)
+					ent:Fadeout(2)
+				else
+					local data = {}
+					data.Entity = ent
+					ply:DoProcess("EatFruit",2,data)
+				end
+			elseif ent:IsTreeModel() then
+				ply:DoProcess("SproutCollect",5)
+			elseif cls == "gms_resourcedrop" then
+				ply:PickupResourceEntity(ent)
+			elseif ent:IsOnFire() then
+				ply:OpenCombiMenu("Cooking")
+			end
+		end
+	elseif tr.HitWorld then
+		for k,v in pairs(ents.FindInSphere(tr.HitPos,100)) do
+			if v:IsGrainModel() then
+				local data = {}
+				data.Entity = v
+				
+				ply:DoProcess("HarvestGrain",3,data)
+				return
+			elseif v:IsHempModel() then
+				local data = {}
+				data.Entity = v
+				
+				ply:DoProcess("HarvestHemp",3,data)
+				return
+			elseif v:IsBerryBushModel() then
+				local data = {}
+				data.Entity = v
+				
+				ply:DoProcess("HarvestBush",3,data)
+				return
+			end
+		end
+		
+		if (tr.MatType == MAT_DIRT or tr.MatType == MAT_GRASS or tr.MatType == MAT_SAND) and !GMS.IsInWater(tr.HitPos) then
+			local time = 5
+			if ply:GetActiveWeapon():GetClass() == "gms_shovel" then time = 2 end
+			
+			ply:DoProcess("Foraging",time)
+		end
+	elseif !tr.Hit or GMS.IsInWater(tr.HitPos) then
+		local trace = {}
+		trace.start = ply:GetShootPos()
+		trace.endpos = trace.start + (ply:GetAimVector() * 200)
+		trace.mask = MASK_WATER
+		
+		local tr2 = util.TraceLine(trace)
+		
+		if tr2.Hit then
+			if ply:WaterLevel() > 0 then
+				if ply.Thirst < 1000 and ply.Thirst > 950 then
+					ply.Thirst = 1000
+					ply:UpdateNeeds()
+					ply:EmitSound(Sound("ambient/water/water_spray"..math.random(1,3)..".wav"))
+				elseif ply.Thirst < 950 then
+					ply.Thirst = ply.Thirst + 50
+					ply:EmitSound(Sound("ambient/water/water_spray"..math.random(1,3)..".wav"))
+					ply:UpdateNeeds()
+				end
+			else
+				ply:DoProcess("BottleWater",3)
+			end
+		end
+	end
 end
 
 function PlayerMeta:PickupResourceEntity(ent)

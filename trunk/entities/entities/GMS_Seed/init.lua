@@ -17,45 +17,77 @@ function ENT:Initialize()
 	local onplanet, num = SB_OnEnvironment(self.Entity:GetPos(), self.Entity.num, nil, self.Entity.IgnoreClasses)
 	if onplanet then
 		self.Entity:SetModel("models/weapons/w_bugbait.mdl")
-		--self.Entity:PhysicsInit( SOLID_NONE )
+		self.Entity:PhysicsInit( SOLID_VPHYSICS )
 		self.Entity:SetMoveType( MOVETYPE_NONE )
-		self.Entity:SetSolid( SOLID_NONE )
-		self.Entity:SetColor(0,255,0,255)
+		self.Entity:SetSolid( SOLID_VPHYSICS )
+		
+		self.Entity.Runs = 0
+		self.Entity:SetNWInt('runs', self.Entity.Runs)
 	else
 		self.Entity:Remove()
 	end
 end
 
 function ENT:Setup(strType,time,ply)
-         self.Entity.ResType = strType
-         self.Entity.Player = ply
-
-         timer.Create("GMS_SeedTimers_"..self.Entity:EntIndex(),time,1,self.Grow,self)
+	self.Entity.ResType = strType
+	self.Entity.Player = ply
+	
+	self.Entity:SetNWString('restype', self.Entity.ResType)
+	self.Entity:SetNWString('player', self.Entity.Player:Name())
+	
+	if strType == 'hemp' then
+		self.Entity:SetColor(255,0,0,255)
+	else
+		self.Entity:SetColor(0,255,0,255)
+	end
+	
+	time = time / 10
+	
+	timer.Create("GMS_SeedTimers_"..self.Entity:EntIndex(),time,10,self.Grow,self)
 end
 
+-- function ENT:GetPlayer()
+	-- return self.Entity.Player
+-- end
+
+-- function ENT:GetResType()
+	-- return self.Entity.ResType
+-- end
+
+-- function ENT:GetRuns()
+	-- return self.Entity.Runs
+-- end
+
 function ENT:Grow()
-         local strType = self.Entity.ResType
-         local ply = self.Entity.Player
+	self.Entity.Runs = self.Entity.Runs + 1
+	self.Entity:SetNWInt('runs', self.Entity.Runs)
+	
+	if self.Entity.Runs < 10 then return end
+	
+	local strType = self.Entity.ResType
+	local ply = self.Entity.Player
 
-         if strType == "tree" then
-            GM.MakeTree(self.Entity:GetPos())
+	if strType == "tree" then
+		GM.MakeTree(self.Entity:GetPos())
 
-         elseif strType == "melon" then
-            local num = 1
-            
-            if ply:HasUnlock("ExpertFarmer") then
-               num = num + math.random(1,2)
-            end
-            
-            GM.MakeMelon(self.Entity:GetPos(),num)
+	elseif strType == "melon" then
+		local num = 1
+		
+		if ply:HasUnlock("ExpertFarmer") then
+		num = num + math.random(1,2)
+		end
+		
+		GM.MakeMelon(self.Entity:GetPos(),num)
 
-         elseif strType == "grain" then
-            GM.MakeGrain(self.Entity:GetPos())
-         elseif strType == "berry" then
-            GM.MakeBush(self.Entity:GetPos())
-         end
+	elseif strType == "grain" then
+		GM.MakeGrain(self.Entity:GetPos())
+	elseif strType == "berry" then
+		GM.MakeBush(self.Entity:GetPos())
+	elseif strType == "hemp" then
+		GM.MakeHemp(self.Entity:GetPos())
+	end
 
-         self.Entity:Fadeout()
+	self.Entity:Fadeout()
 end
 
 function GM.MakeTree(pos)
@@ -109,15 +141,27 @@ function GM.MakeMelon(pos,num)
 end
 
 function GM.MakeGrain(pos)
-         local ent = ents.Create("prop_physics_override")
-         ent:SetPos(pos + Vector(math.random(-10,10),math.random(-10,10),0))
-         ent:SetAngles(Angle(0,math.random(1,360),0))
-         ent:SetModel("models/props_foliage/cattails.mdl")
-         ent:Spawn()
+	local ent = ents.Create("prop_physics_override")
+	ent:SetPos(pos + Vector(math.random(-10,10),math.random(-10,10),0))
+	ent:SetAngles(Angle(0,math.random(1,360),0))
+	ent:SetModel("models/props_foliage/cattails.mdl")
+	ent:Spawn()
 
-         ent:Fadein()
-         ent.StrandedProtected = true
-         ent:RiseFromGround(1,50)
+	ent:Fadein()
+	ent.StrandedProtected = true
+	ent:RiseFromGround(1,50)
+end
+
+function GM.MakeHemp(pos)
+	local ent = ents.Create("prop_physics_override")
+	ent:SetPos(pos + Vector(math.random(-10,10),math.random(-10,10),0))
+	ent:SetAngles(Angle(0,math.random(1,360),0))
+	ent:SetModel("models/props_foliage/bramble001a.mdl")
+	ent:Spawn()
+	
+	ent:Fadein()
+	ent.StrandedProtected = true
+	ent:RiseFromGround(1,50)
 end
 
 function GM.MakeBush(pos)

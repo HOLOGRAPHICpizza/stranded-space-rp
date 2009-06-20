@@ -544,25 +544,38 @@ function DrawMoney()
 end
 hook.Add("HUDPaint", "DrawMoney", DrawMoney)
 
--- Door HUD
-function DoorHUD()
+-- Trace HUD
+function TraceHUD()
 	local tr = LocalPlayer():TraceFromEyes(150)
-	if tr.Entity:IsValid() and tr.Entity:IsDoor() then
-		local msg = ''
-		if tr.Entity:GetNWBool('notOwnable') then
-			msg = 'Unownable'
-		else
-			local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
-			if owner:IsPlayer() then
-				msg = owner:Name()
+	if tr.Entity:IsValid() then
+		if tr.Entity:IsDoor() then -- Door HUD
+			local msg = ''
+			if tr.Entity:GetNWBool('notOwnable') then
+				msg = 'Unownable'
 			else
-				msg = 'Press F4 to rent.'
+				local owner = player.GetByID( tr.Entity:GetNWInt('Owner1') )
+				if owner:IsPlayer() then
+					msg = owner:Name()
+				else
+					msg = 'Press F4 to rent.'
+				end
 			end
+			draw.SimpleTextOutlined(msg, "ScoreboardText", ScrW() / 2, ScrH() / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+			
+			local title = tr.Entity:GetNWString('title') or ''
+			draw.SimpleTextOutlined(title, "ScoreboardText", ScrW() / 2, (ScrH() / 2) - 20, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+		elseif tr.Entity:GetClass() == 'gms_seed' then -- Seed HUD
+			local player = tr.Entity:GetNWString('player') or ''
+			draw.SimpleTextOutlined(player, "ScoreboardText", ScrW() / 2, ScrH() / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+			
+			local ResType = tr.Entity:GetNWString('restype') or ''
+			draw.SimpleTextOutlined(string.Capitalize(ResType), "ScoreboardText", ScrW() / 2, (ScrH() / 2) + 20, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+			
+			local runs = tr.Entity:GetNWInt('runs') or 0
+			draw.SimpleTextOutlined(tostring(runs * 10) .. '%', "ScoreboardText", ScrW() / 2, (ScrH() / 2) + 40, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
 		end
-		draw.SimpleTextOutlined(msg, "ScoreboardText", ScrW() / 2, ScrH() / 2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
 		
-		local title = tr.Entity:GetNWString('title') or ''
-		draw.SimpleTextOutlined(title, "ScoreboardText", ScrW() / 2, (ScrH() / 2) - 20, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
+		-- draw.SimpleTextOutlined(tr.Entity:GetClass(), "ScoreboardText", ScrW() - 10, ScrH() - 40, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, Color(0,0,0,255))
 	end
 end
-hook.Add("HUDPaint", "DoorHUD", DoorHUD)
+hook.Add("HUDPaint", "TraceHUD", TraceHUD)

@@ -179,6 +179,7 @@ PROCESS.Results[1] = "Melon Seeds"
 PROCESS.Results[2] = "Grain Seeds"
 PROCESS.Results[3] = "Herbs"
 PROCESS.Results[4] = "Berries"
+PROCESS.Results[5] = "Hemp Seeds"
 
 function PROCESS:OnStart()
          self.Owner:MakeProcessBar("Foraging",self.Time)
@@ -365,6 +366,43 @@ function PROCESS:OnStop()
 end
 
 GMS.RegisterProcess("HarvestGrain",PROCESS)
+
+-- Hemp Harvesting
+local PROCESS = {}
+
+function PROCESS:OnStart()
+	self.Owner:MakeProcessBar("Harvesting Hemp",self.Time)
+	self.Owner:Freeze(true)
+	
+	local ent = self.Data.Entity
+end
+
+function PROCESS:OnStop()
+	local num = math.random(1,100)
+	local add = 0
+	if self.Owner:GetActiveWeapon():GetClass() == "gms_sickle" then add = add + 30 end
+		if num > 50 - self.Owner:GetSkill("Harvesting") - add then
+			local amount = 5
+			self.Owner:IncResource("Hemp",amount)
+			self.Owner:IncResource("Hemp_Seeds",1)
+			self.Owner:IncXP("Harvesting",math.Clamp(math.Round(50 / self.Owner:GetSkill("Harvesting")),1 , 1000))
+			self.Owner:SendMessage("Hemp ("..amount.."x)", 3, Color(10,200,10,255))
+			self.Owner:SendMessage("Hemp Seeds (1x)", 3, Color(10,200,10,255))
+			self.Owner:EmitSound(Sound("items/ammo_pickup.wav"))
+			
+			local ent = self.Data.Entity
+			
+			if ent and ent != NULL then
+				ent:Fadeout()
+			end
+		else
+		self.Owner:SendMessage("Failed.", 3, Color(200,0,0,255))
+	end
+
+	self.Owner:Freeze(false)
+end
+GMS.RegisterProcess("HarvestHemp",PROCESS)
+
 /*---------------------------------------------------------
  Berry harvesting
 ---------------------------------------------------------*/
@@ -672,6 +710,30 @@ function PROCESS:OnStop()
 end
 
 GMS.RegisterProcess("PlantGrain",PROCESS)
+
+-- Plant Hemp
+local PROCESS = {}
+
+function PROCESS:OnStart()
+	self.Owner:MakeProcessBar("Planting Hemp",self.Time)
+	self.Owner:Freeze(true)
+end
+
+function PROCESS:OnStop()
+
+	self.Owner:DecResource("Hemp_Seeds",1)
+	self.Owner:IncXP("Planting",math.Clamp(math.Round(50 / self.Owner:GetSkill("Planting")),1 , 1000))
+	self.Owner:SendMessage("Successfully planted.", 3, Color(10,200,10,255))
+	
+	local ent = ents.Create("GMS_Seed")
+	ent:SetPos(self.Data.Pos)
+	local tbl = ent:GetTable()
+	tbl:Setup("hemp",1200 - math.Clamp(self.Owner:GetSkill("Planting") * 4,0,900),self.Owner)
+	ent:Spawn()
+
+	self.Owner:Freeze(false)
+end
+GMS.RegisterProcess("PlantHemp",PROCESS)
 
 /*---------------------------------------------------------
   Plant Bush
