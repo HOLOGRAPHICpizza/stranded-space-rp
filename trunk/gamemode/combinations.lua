@@ -887,21 +887,66 @@ COMBI.SwepClass = "weapon_ar2"
 
 GMS.RegisterCombi("AR2",COMBI,"Guns")
 
-/*---------------------------------------------------------
-  Stunstick
----------------------------------------------------------*/
--- local COMBI = {}
+-- Drugs
 
--- COMBI.Name = "Stunstick"
--- COMBI.Description = [[This highly advanced, effective melee weapon is useful for hunting down animals and fellow stranded alike.
--- You need:
--- 40 Iron
--- ]]
+-- Stim-Pack
+local COMBI = {}
 
--- COMBI.Req = {}
--- COMBI.Req["Iron"] = 40
+COMBI.Name = "Stim-Pack"
+COMBI.Description = [[Heals you.
+You need:
+20 Herbs
+1 Iron
+]]
 
--- COMBI.Texture = "weapons/swep"
--- COMBI.SwepClass = "weapon_stunstick"
+COMBI.Req = {}
+COMBI.Req["Iron"] = 1
+COMBI.Req["Herbs"] = 20
 
--- GMS.RegisterCombi("Crowbar",COMBI,"Weapons")
+COMBI.Results = {}
+COMBI.Results["Stim-Pack"] = 1
+
+GMS.RegisterCombi("Stim-Pack",COMBI,"Drugs")
+
+-- Caffeine
+local COMBI = {}
+
+COMBI.Name = "Caffeine"
+COMBI.Description = [[Makes you not sleepy!
+You need:
+20 Berries
+1 Water Bottle
+1 Stone (Stays)
+]]
+
+COMBI.Req = {}
+COMBI.Req["Berries"] = 20
+COMBI.Req["Water_Bottles"] = 1
+COMBI.Req["Stone"] = 1
+
+COMBI.Results = {}
+COMBI.Results["Caffeine"] = 1
+COMBI.Results["Stone"] = 1
+
+GMS.RegisterCombi("Caffeine",COMBI,"Drugs")
+
+-- Powerthirst
+local COMBI = {}
+
+COMBI.Name = "Powerthirst"
+COMBI.Description = [[You'll be running ALL THE TIME!!!
+You need:
+1 Caffeine
+3 Water Bottles
+10 Spices
+]]
+
+COMBI.Req = {}
+COMBI.Req["Caffeine"] = 1
+COMBI.Req["Water_Bottles"] = 3
+COMBI.Req["Spices"] = 10
+
+COMBI.Results = {}
+COMBI.Results["Powerthirst"] = 1
+
+GMS.RegisterCombi("Powerthirst",COMBI,"Drugs")

@@ -197,6 +197,10 @@ GMS.Commands["gms_BuildingsCombi"] = "Structures"
 GMS.Commands["gms_GenericCombi"] = "Combinations"
 GMS.Commands["gms_DropWeapon"] = "Drop Weapon"
 GMS.Commands["gms_options"] = "Options"
+GMS.Commands["gms_UseStimPack"] = "Use Stim-Pack"
+GMS.Commands["gms_UseCaffeine"] = "Use Caffeine"
+GMS.Commands["gms_DrinkPowerthirst"] = "Drink Powerthirst"
+GMS.Commands["gms_OpenDrugsMenu"] = "Drugs"
 
 -- Shared Functions and Stuff
 PlayerMeta = FindMetaTable("Player")

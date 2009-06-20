@@ -25,7 +25,7 @@ UNLOCK.Description = [[Your movement speed has got permanent increase. Also, you
 UNLOCK.Req = {}
 UNLOCK.Req["Survival"] = 10
 function UNLOCK.OnUnlock(ply)
-         GAMEMODE:SetPlayerSpeed(ply, 400, 100)
+         GAMEMODE:SetPlayerSpeed(ply, 400, 250)
 end
 
 GMS.RegisterUnlock("Sprint_Mkii",UNLOCK)

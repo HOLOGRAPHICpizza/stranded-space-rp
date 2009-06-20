@@ -678,6 +678,14 @@ function GMS.MobBossUnHit()
 	end
 end
 
+function GMS.SetWalkSpeed(ply, speed)
+	ply:SetWalkSpeed(speed)
+end
+
+function GMS.SetRunSpeed(ply, speed)
+	ply:SetRunSpeed(speed)
+end
+
 function EntityMeta:AddOwner(ply)
 	local num = self:GetNWInt("OwnerNum") or 0
 	num = num + 1
@@ -1322,7 +1330,7 @@ function GM:PlayerSpawn(ply)
 	
 	if ply:HasUnlock("Sprint_Mkii") then
 		ply:SetWalkSpeed(400)
-		ply:SetRunSpeed(150)
+		ply:SetRunSpeed(250)
 	else
 		ply:SetWalkSpeed(250)
 		ply:SetRunSpeed(250)
@@ -1742,6 +1750,47 @@ function GM.DrinkFromBottle(ply,cmd,args)
 end
 
 concommand.Add("gms_DrinkBottle",GM.DrinkFromBottle)
+
+-- Use Stim-Pack
+function GM.UseStimPack(ply,cmd,args)
+	if ply:GetResource("Stim-Pack") < 1 then
+		ply:SendMessage("You need a Stim-Pack.",3,Color(200,0,0,255))
+	return end
+
+	ply:DoProcess("UseStimPack",1.5)
+end
+concommand.Add("gms_UseStimPack",GM.UseStimPack)
+
+-- Use Caffeine
+function GM.UseCaffeine(ply,cmd,args)
+	if ply:GetResource("Caffeine") < 1 then
+		ply:SendMessage("You need some Caffeine.",3,Color(200,0,0,255))
+	return end
+
+	ply:DoProcess("UseCaffeine",1.5)
+end
+concommand.Add("gms_UseCaffeine",GM.UseCaffeine)
+
+-- Drink Powerthirst
+function GM.DrinkPowerthirst(ply,cmd,args)
+	if ply:GetResource("Powerthirst") < 1 then
+		ply:SendMessage("You need some Powerthirst.",3,Color(200,0,0,255))
+	return end
+
+	ply:DoProcess("DrinkPowerthirst",1.5)
+end
+concommand.Add("gms_DrinkPowerthirst",GM.DrinkPowerthirst)
+
+-- Open Drugs Menu
+function GM.OpenDrugsMenu(ply)
+	if ply:Team() == 5 then
+		ply:OpenCombiMenu("Drugs")
+	else
+		ply:SendMessage("Only Doctors can use drugs!",3,Color(200,0,0,255))
+	end
+end
+concommand.Add("gms_OpenDrugsMenu",GM.OpenDrugsMenu)
+
 /*---------------------------------------------------------
 
   Drop weapon command
@@ -1853,6 +1902,12 @@ function GM.MakeCombination(ply,cmd,args)
 		return
 	end
 	
+	if group == 'Drugs' and ply:Team() != 5 then
+		ply:SendMessage("Only Doctors can make drugs!",3,Color(200,0,0,255))
+		ply:CloseCombiMenu()
+		return
+	end
+	
 	//Check for nearby forge/fire etc:
 	if group == "Cooking" then
 		local nearby = false
@@ -1944,7 +1999,7 @@ function GM.MakeCombination(ply,cmd,args)
 
 		ply:DoProcess("Cook",time,data)
 
-	elseif group == "Generic" then
+	elseif group == "Generic" or group == "Drugs" then
 		local data = {}
 		data.Name = tbl.Name
 		data.Res = tbl.Results

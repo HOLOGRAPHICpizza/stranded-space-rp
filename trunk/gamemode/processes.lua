@@ -858,36 +858,135 @@ GMS.RegisterProcess("BottleWater",PROCESS)
 local PROCESS = {}
 
 function PROCESS:OnStart()
-         self.Owner:MakeProcessBar("Drinking Bottle",self.Time)
-         self.Owner:Freeze(true)
-         self.StartTime = CurTime()
-         
-         self:PlaySound()
+	self.Owner:MakeProcessBar("Drinking Bottle",self.Time)
+	self.Owner:Freeze(true)
+	self.StartTime = CurTime()
+	
+	self:PlaySound()
 end
 
 function PROCESS:PlaySound()
-         if CurTime() - self.StartTime > self.Time then return end
-         
-         self.Owner:GetActiveWeapon():SendWeaponAnim(ACT_VM_HITCENTER)
-         self.Owner:EmitSound(Sound("ambient/water/water_spray"..tostring(math.random(1,3))..".wav"))
-         
-         timer.Simple(0.5,self.PlaySound,self)
+	if CurTime() - self.StartTime > self.Time then return end
+	
+	self.Owner:GetActiveWeapon():SendWeaponAnim(ACT_VM_HITCENTER)
+	self.Owner:EmitSound(Sound("ambient/water/water_spray"..tostring(math.random(1,3))..".wav"))
+	
+	timer.Simple(0.5,self.PlaySound,self)
 end
 
 function PROCESS:Think()
-         if self.Owner.Thirst < 1000 then
-            self.Owner:SetThirst(self.Owner.Thirst + 1)
-         end
+	if self.Owner.Thirst < 1000 then
+		self.Owner:SetThirst(self.Owner.Thirst + 1)
+	end
 end
 
 function PROCESS:OnStop()
-         self.Owner:DecResource("Water_Bottles",1)
-         self.Owner:SendMessage("You're a little less thirsty now.", 3, Color(10,200,10,255))
+	self.Owner:DecResource("Water_Bottles",1)
+	self.Owner:SendMessage("You're a little less thirsty now.", 3, Color(10,200,10,255))
 
-         self.Owner:Freeze(false)
+	self.Owner:Freeze(false)
+end
+GMS.RegisterProcess("DrinkBottle",PROCESS)
+
+-- Use Stim-Pack
+local PROCESS = {}
+
+function PROCESS:OnStart()
+	self.Owner:MakeProcessBar("Using Stim-Pack",self.Time)
+	self.Owner:Freeze(true)
+	self.StartTime = CurTime()
+	
+	self:PlaySound()
 end
 
-GMS.RegisterProcess("DrinkBottle",PROCESS)
+function PROCESS:PlaySound()
+	if CurTime() - self.StartTime > self.Time then return end
+	
+	self.Owner:GetActiveWeapon():SendWeaponAnim(ACT_VM_HITCENTER)
+	self.Owner:EmitSound(Sound("items/smallmedkit1.wav"))
+	
+	timer.Simple(0.5,self.PlaySound,self)
+end
+
+function PROCESS:Think()
+	self.Owner:Heal(1)
+end
+
+function PROCESS:OnStop()
+	self.Owner:DecResource("Stim-Pack",1)
+	self.Owner:SendMessage("You're a little less dead now.", 3, Color(10,200,10,255))
+
+	self.Owner:Freeze(false)
+end
+GMS.RegisterProcess("UseStimPack",PROCESS)
+
+-- Use Caffeine
+local PROCESS = {}
+
+function PROCESS:OnStart()
+	self.Owner:MakeProcessBar("Using Caffeine",self.Time)
+	self.Owner:Freeze(true)
+	self.StartTime = CurTime()
+end
+
+function PROCESS:Think()
+	if self.Owner.Sleepiness < 1000 then
+		self.Owner:SetSleepiness(self.Owner.Sleepiness + 1)
+	end
+end
+
+function PROCESS:OnStop()
+	self.Owner:DecResource("Caffeine",1)
+	self.Owner:SendMessage("You're a little less tired now.", 3, Color(10,200,10,255))
+
+	self.Owner:Freeze(false)
+end
+GMS.RegisterProcess("UseCaffeine",PROCESS)
+
+-- Drink Powerthirst
+local PROCESS = {}
+
+function PROCESS:OnStart()
+	self.Owner:MakeProcessBar("Drinking Powerthirst",self.Time)
+	self.Owner:Freeze(true)
+	self.StartTime = CurTime()
+	
+	self:PlaySound()
+end
+
+function PROCESS:PlaySound()
+	if CurTime() - self.StartTime > self.Time then return end
+	
+	self.Owner:GetActiveWeapon():SendWeaponAnim(ACT_VM_HITCENTER)
+	self.Owner:EmitSound(Sound("ambient/water/water_spray"..tostring(math.random(1,3))..".wav"))
+	
+	timer.Simple(0.5,self.PlaySound,self)
+end
+
+function PROCESS:Think()
+	if self.Owner.Thirst < 1000 then
+		self.Owner:SetThirst(self.Owner.Thirst + 1)
+	end
+end
+
+function PROCESS:OnStop()
+	self.Owner:DecResource("Powerthirst",1)
+	self.Owner:SendMessage("You're now RUNNING ALL THE TIME!!!", 3, Color(10,200,10,255))
+
+	self.Owner:Freeze(false)
+	
+	self.Owner:SetWalkSpeed(1000)
+	self.Owner:SetRunSpeed(1000)
+	
+	if self.Owner:HasUnlock("Sprint_Mkii") then
+		timer.Simple(120, GMS.SetWalkSpeed, self.Owner, 400)
+		timer.Simple(120, GMS.SetRunSpeed, self.Owner, 250)
+	else
+		timer.Simple(120, GMS.SetWalkSpeed, self.Owner, 250)
+		timer.Simple(120, GMS.SetRunSpeed, self.Owner, 250)
+	end
+end
+GMS.RegisterProcess("DrinkPowerthirst",PROCESS)
 
 /*---------------------------------------------------------
   Cooking
