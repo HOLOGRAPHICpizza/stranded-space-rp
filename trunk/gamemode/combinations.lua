@@ -179,6 +179,48 @@ COMBI.Results = {}
 COMBI.Results["Concrete"] = 1
 
 GMS.RegisterCombi("Concrete",COMBI,"Generic")
+
+-- Paper
+local COMBI = {}
+
+COMBI.Name = "Paper"
+COMBI.Description = [[Paper can be used for various trippy purposes.
+You need:
+2 Wood
+1 Bottle of Water
+1 Stone (Stays)
+]]
+
+COMBI.Req = {}
+COMBI.Req["Stone"] = 1
+COMBI.Req["Water_Bottles"] = 1
+COMBI.Req["Wood"] = 2
+
+COMBI.Results = {}
+COMBI.Results["Paper"] = 1
+COMBI.Results["Stone"] = 1
+
+GMS.RegisterCombi("Paper",COMBI,"Generic")
+
+-- Joint
+local COMBI = {}
+
+COMBI.Name = "Joint"
+COMBI.Description = [[Woahhh maaaan this is some trippy stuff!
+You need:
+1 Hemp
+1 Paper
+]]
+
+COMBI.Req = {}
+COMBI.Req["Hemp"] = 1
+COMBI.Req["Paper"] = 1
+
+COMBI.Results = {}
+COMBI.Results["Joint"] = 1
+
+GMS.RegisterCombi("Joint",COMBI,"Generic")
+
 /*---------------------------------------------------------
 
   Coooking
