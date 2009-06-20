@@ -28,3 +28,5 @@
   * Added weapon keeping / dropping.
   * Added Hit Calling System
   * Added weaponbench.
+  * Added Hemp and Joints.
+  * Added Drugs for the doctor class.
