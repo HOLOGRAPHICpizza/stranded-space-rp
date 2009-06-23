@@ -63,16 +63,6 @@ end
 /*---------------------------------------------------------
   Custom player messages
 ---------------------------------------------------------*/
-function PlayerMeta:SendMessage(text,duration,color)
-         local duration = duration or 3
-         local color = color or Color(255,255,255,255)
-
-         umsg.Start("gms_sendmessage",self)
-         umsg.String(text)
-         umsg.Short(duration)
-         umsg.String(color.r..","..color.g..","..color.b..","..color.a)
-         umsg.End()
-end
 
 function PlayerMeta:SendAchievement(text)
          umsg.Start("gms_sendachievement",self)
@@ -118,8 +108,7 @@ function GM:ShowSpare2( ply )
 			if owner == ply then -- The player owns it, wants to sell.
 				tr.Entity:RemoveOwner(ply)
 				
-				local plyMoney = ply:GetNWInt('money')
-				ply:SetNWInt('money', plyMoney + 50)
+				ply:IncMoney(50)
 			else -- Someone else owns the door.
 				ply:SendMessage("Door already owned!",3,Color(200,0,0,255))
 			end
@@ -127,13 +116,12 @@ function GM:ShowSpare2( ply )
 			if tr.Entity:GetNWBool('notOwnable') then -- Door not ownable.
 				ply:SendMessage("Door is unownable!",3,Color(200,0,0,255))
 			else -- Buy the door.
-				local plyMoney = ply:GetNWInt('money')
-				plyMoney = plyMoney - 100
+				local plyMoney = ply:GetMoney()
 				
-				if plyMoney < 0 then
+				if plyMoney < 100 then
 					ply:SendMessage("You don't have enough money!",3,Color(200,0,0,255))
 				else
-					ply:SetNWInt('money', plyMoney)
+					ply:DecMoney(100)
 					tr.Entity:AddOwner(ply)
 				end
 			end
@@ -362,6 +350,26 @@ function EntityMeta:SetResourceDropInfoInstant(strType,int)
              umsg.Short(self.Amount)
              umsg.End()
          end
+end
+
+function PlayerMeta:GetMoney()
+	return self:GetNWInt('money') or 0
+end
+
+function PlayerMeta:IncMoney(ammount)
+	local money = self:GetMoney()
+	self:SetNWInt('money', money + ammount)
+end
+
+function PlayerMeta:DecMoney(ammount)
+	local money = self:GetMoney()
+	
+	if ammount > money then
+		ply:SendMessage("Not enough money.",3,Color(200,0,0,255))
+		return
+	end
+	
+	self:SetNWInt('money', money - ammount)
 end
 
 /*---------------------------------------------------------
@@ -1103,6 +1111,26 @@ function GM.SetClassSpawn(ply,cmd,args)
 	end
 end
 concommand.Add("gms_admin_setspawn",GM.SetClassSpawn)
+
+function GM.CreateGman(ply,cmd,args)
+	if !ply:IsAdmin() then 
+		ply:SendMessage("You need admin rights for this!",3,Color(200,0,0,255))
+	return end
+	
+	local tr = ply:TraceFromEyes(150)
+	
+	if tr.HitWorld then
+		local ent = ents.Create("GMS_Gman")
+		ent:SetPos(tr.HitPos)
+		ent:Spawn()
+		-- ent:GetPhysicsObject():EnableMotion(false)
+		-- Msg('Spawnpoint created for class ' .. ent:GetSpawnName() .. ".\n")
+	else
+		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
+	end
+end
+concommand.Add("gms_admin_creategman",GM.CreateGman)
+
 /*---------------------------------------------------------
 
   Prop fadeout
@@ -1493,8 +1521,7 @@ function GM.AutoSaveAllCharacters()
 	for k,v in pairs(player.GetAll()) do
 		if v:Alive() then
 			local payday = ClassPayday[v:Team()]
-			local money = v:GetNWInt('money')
-			v:SetNWInt('money', money + payday)
+			v:IncMoney(payday)
 			v:SendMessage("Payday! You've earned $" .. payday .. '.',10,Color(255,255,255,255))
 		end
 		
@@ -1532,7 +1559,7 @@ function GM.SaveCharacter(ply,cmd,args)
 	tbl["unlocks"] = {}
 	tbl["date"] = os.date("%A %m/%d/%y")
 	tbl["name"] = ply:Nick()
-	tbl['money'] = ply:GetNWInt('money')
+	tbl['money'] = ply:GetMoney()
 
 	for k,v in pairs(ply.Skills) do
 		tbl["skills"][k] = v
@@ -1786,10 +1813,47 @@ function GM.OpenDrugsMenu(ply)
 	if ply:Team() == 5 then
 		ply:OpenCombiMenu("Drugs")
 	else
-		ply:SendMessage("Only Doctors can use drugs!",3,Color(200,0,0,255))
+		ply:SendMessage("Only Doctors can make drugs!",3,Color(200,0,0,255))
 	end
 end
 concommand.Add("gms_OpenDrugsMenu",GM.OpenDrugsMenu)
+
+-- Sell Drugs
+function GM.SellDrugs(ply)
+	local nearby = false
+		
+	for k,v in pairs(ents.FindInSphere(ply:GetPos(),100)) do
+		if v:GetClass() == "gms_gman" then nearby = true end
+	end
+	
+	if !nearby then
+		ply:SendMessage("You need to be close to the Gman.",3,Color(200,0,0,255))
+		return
+	end
+	
+	local hemp = ply:GetResource('Hemp') or 0
+	if hemp > 0 then
+		ply:DecResource('Hemp', hemp)
+		
+		local hempMoney = hemp * 100
+		ply:IncMoney(hempMoney)
+		ply:SendMessage("Sold ("..hemp.."x) Hemp for $"..hempMoney, 3, Color(10,200,10,255))
+	end
+	
+	local joint = ply:GetResource('Joint') or 0
+	if joint > 0 then
+		ply:DecResource('Joint', joint)
+		
+		local jointMoney = joint * 150
+		ply:IncMoney(jointMoney)
+		ply:SendMessage("Sold ("..joint.."x) Joints for $"..jointMoney, 3, Color(10,200,10,255))
+	end
+	
+	if hemp == 0 and joint == 0 then
+		ply:SendMessage("Go away you weed-less faggort.",3,Color(200,0,0,255))
+	end
+end
+concommand.Add("gms_selldrugs",GM.SellDrugs)
 
 /*---------------------------------------------------------
 
@@ -1949,6 +2013,17 @@ function GM.MakeCombination(ply,cmd,args)
 			ply:SendMessage("You need to be close to a weaponbench!",3,Color(200,0,0,255))
 			ply:CloseCombiMenu()
 		return end
+	elseif group == "Gman" then
+		local nearby = false
+		
+		for k,v in pairs(ents.FindInSphere(ply:GetPos(),100)) do
+			if v:GetClass() == "gms_gman" then nearby = true end
+		end
+		
+		if !nearby then
+			ply:SendMessage("You need to be close to a Gman!",3,Color(200,0,0,255))
+			ply:CloseCombiMenu()
+		return end
 	end
 
 	//Check for skills
@@ -1982,6 +2057,15 @@ function GM.MakeCombination(ply,cmd,args)
 		ply:SendMessage("Not enough resources.",3,Color(200,0,0,255))
 		ply:CloseCombiMenu()
 	return end
+	
+	-- Check for money
+	local price = tbl.Price or 0
+	local money = ply:GetMoney()
+	
+	if price > money then
+		ply:SendMessage("Not enough money.",3,Color(200,0,0,255))
+		ply:CloseCombiMenu()
+	return end
 
 	ply:CloseCombiMenu()
 	//all well, make stuff:
@@ -1999,11 +2083,12 @@ function GM.MakeCombination(ply,cmd,args)
 
 		ply:DoProcess("Cook",time,data)
 
-	elseif group == "Generic" or group == "Drugs" then
+	elseif group == "Generic" or group == "Drugs" or group == 'Gman' then
 		local data = {}
 		data.Name = tbl.Name
 		data.Res = tbl.Results
 		data.Cost = tbl.Req
+		data.Price = price
 		local time = 5
 
 		ply:DoProcess("MakeGeneric",time,data)
@@ -2445,6 +2530,7 @@ function EntityMeta:MakeCampfire()
              end
          end
 end
+
 /*---------------------------------------------------------
   Use Hook
 ---------------------------------------------------------*/
@@ -2460,8 +2546,8 @@ function GM.UseKeyHook(ply,key)
 			local mdl = tr.Entity:GetModel()
 			local cls = tr.Entity:GetClass()
 			
-			if ent:IsFoodModel() or cls == "GMS_Food" then
-				if cls == "GMS_Food" then
+			if ent:IsFoodModel() or cls == "gms_food" then
+				if cls == "gms_food" then
 					ply:SendMessage("Restored "..tostring((ent.Value / 1000) * 100).."% food.",3,Color(10,200,10,255))
 					ply:SetFood(ply.Hunger + ent.Value)
 					ent:Fadeout(2)
@@ -2476,6 +2562,10 @@ function GM.UseKeyHook(ply,key)
 				ply:PickupResourceEntity(ent)
 			elseif ent:IsOnFire() then
 				ply:OpenCombiMenu("Cooking")
+			elseif cls == 'gms_gman' then
+				-- ply:ConCommand("gms_OpenGmanWindow\n")
+				-- ply:OpenCombiMenu("Gman")
+				ply:ConCommand("gms_selldrugs\n")
 			end
 		end
 	elseif tr.HitWorld then
@@ -2605,7 +2695,7 @@ function GM:FindMapSpecificEntities()
          self.MapSpecificEntities = ents.GetAll()
 end
 
-timer.Simple(3,GM.FindMapSpecificEntities,GM)
+--timer.Simple(3,GM.FindMapSpecificEntities,GM)
 
 //Commands
 function GM.SaveMapCommand(ply,cmd,args)
@@ -2749,6 +2839,8 @@ function GM:SaveMap(name)
 end
 
 function GM.AutoLoadMapCommand(ply,cmd,args)
+	GAMEMODE:FindMapSpecificEntities()
+	
 	if !firstPlayerMapLoad then
 		local map = game.GetMap()
 		GAMEMODE:PreLoadMap(map)

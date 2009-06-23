@@ -474,6 +474,7 @@ PANEL.CmdButtons["gms_admin_makerock"] = "Spawn rock"
 PANEL.CmdButtons["gms_admin_maketree"] = "Spawn tree"
 PANEL.CmdButtons["gms_admin_makebush"] = "Spawn random plant"
 PANEL.CmdButtons["gms_admin_saveallcharacters"] = "Save all characters"
+PANEL.CmdButtons["gms_admin_creategman"] = "Spawn Gman"
 
 function PANEL:Init()
 	self:SetTitle("Admin Menu")
@@ -706,6 +707,35 @@ function PANEL:Init()
 end
 
 vgui.Register("GMS_AdminMenu",PANEL,"GMS_Frame")
+
+-- Gman Window
+-- local PANEL = {}
+
+-- function PANEL:Init()
+	-- self:SetTitle("Planting")
+	-- self:SetKeyboardInputEnabled(true)
+	-- self:SetMouseInputEnabled(true)
+	
+	-- local size = ScrH() / 30
+	-- local space = 10
+
+	-- self:SetSize(ScrW() / 6, (table.Count(self.Plantables) * (size + space)) + 30)
+	-- self:SetPos(ScrW() / 1.3 - (self:GetWide() / 2), ScrH() / 2 - (self:GetTall() / 2))
+
+	-- local line = 25
+
+	-- for cmd,txt in pairs(self.Plantables) do
+		-- local button = vgui.Create("gms_CommandButton",self)
+		-- button:SetSize(self:GetWide() - ((self:GetWide() / 8) * 2),ScrH() / 30)
+		-- button:SetPos(self:GetWide() / 8, line)
+		-- button:SetConCommand(cmd.."\n")
+		-- button:SetText(txt)
+		
+		-- line = line + button:GetTall() + 10
+	-- end
+-- end
+-- vgui.Register("GMS_GmanWindow",PANEL,"GMS_Frame")
+
 /*---------------------------------------------------------
   Need HUD
 ---------------------------------------------------------*/

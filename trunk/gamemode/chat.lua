@@ -240,7 +240,7 @@ AddChatCommand('/warrants', Warrants)
 function GiveMoney(ply, text)
 	local args = string.Explode(' ', text)
 	local ammount = tonumber(args[2]) or 0
-	local plyMoney = ply:GetNWInt('money')
+	local plyMoney = ply:GetMoney()
 	
 	if ammount < 10 then
 		ply:SendMessage("You must give at least $10.",3,Color(200,0,0,255))
@@ -258,12 +258,9 @@ function GiveMoney(ply, text)
 		ply:SendMessage("Aim at a player to give money to.",3,Color(200,0,0,255))
 		return ''
 	end
-	local targetMoney = target:GetNWInt('money')
 	
-	plyMoney = plyMoney - ammount
-	targetMoney = targetMoney + ammount
-	ply:SetNWInt('money', plyMoney)
-	target:SetNWInt('money', targetMoney)
+	ply:DecMoney(ammount)
+	target:IncMoney(ammount)
 	
 	ply:SendMessage("You gave $" .. ammount .. ' to ' .. target:Name() .. '.',10,Color(255,255,255,255))
 	ply:PrintMessage(2, "You gave $" .. ammount .. ' to ' .. target:Name() .. '.')
@@ -278,7 +275,7 @@ AddChatCommand('/givemoney', GiveMoney)
 function DropMoney(ply, text)
 	local args = string.Explode(' ', text)
 	local ammount = tonumber(args[2]) or 0
-	local plyMoney = ply:GetNWInt('money')
+	local plyMoney = ply:GetMoney()
 	
 	if ammount < 10 then
 		ply:SendMessage("You must drop at least $10.",3,Color(200,0,0,255))
@@ -297,7 +294,7 @@ function DropMoney(ply, text)
 		ent:Spawn()
 		ent:SetAmmount(ammount)
 		
-		ply:SetNWInt('money', plyMoney - ammount)
+		ply:DecMoney(ammount)
 	else
 		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
 	end

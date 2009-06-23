@@ -181,7 +181,8 @@ GMS.SavedClasses = {
 	"gms_buildsite",
 	"gms_workbench",
 	"gms_stove",
-	"gms_spawnpoint"
+	"gms_spawnpoint",
+	"gms_gman"
 }
 
 GMS.Commands = {}
@@ -196,7 +197,7 @@ GMS.Commands["gms_DrinkBottle"] = "Drink Water"
 GMS.Commands["gms_BuildingsCombi"] = "Structures"
 GMS.Commands["gms_GenericCombi"] = "Combinations"
 GMS.Commands["gms_DropWeapon"] = "Drop Weapon"
-GMS.Commands["gms_options"] = "Options"
+-- GMS.Commands["gms_options"] = "Options"
 GMS.Commands["gms_UseStimPack"] = "Use Stim-Pack"
 GMS.Commands["gms_UseCaffeine"] = "Use Caffeine"
 GMS.Commands["gms_DrinkPowerthirst"] = "Drink Powerthirst"
@@ -226,27 +227,13 @@ function EntityMeta:IsDoor()
 	return false
 end
 
--- /*function GM.LoadAddons()
-         -- if SERVER then Msg("Starting GMS addons.\n") end
+function PlayerMeta:SendMessage(text,duration,color)
+         local duration = duration or 3
+         local color = color or Color(255,255,255,255)
 
-         -- for k,v in pairs(file.Find("../gamemodes/GMStranded/gamemode/addons/*.lua")) do
-             -- Msg("addons/"..v.."\n")
-             -- AddCSLuaFile("addons/"..v)
-         -- end
-         
-         -- local num = 0
-         -- for k,v in pairs(file.Find("../gamemodes/GMStranded/gamemode/addons/*.lua")) do
-             -- include("addons/"..v)
-             -- num = num + 1
-         -- end
-         
-         -- if SERVER then Msg("Loaded "..num.." GMS addons.") end
--- end
-
--- hook.Add("Initialize","GMS_LoadAddonsOnInit",GM.LoadAddons)*/
-
-
-
-                 
-
-                 
+         umsg.Start("gms_sendmessage",self)
+         umsg.String(text)
+         umsg.Short(duration)
+         umsg.String(color.r..","..color.g..","..color.b..","..color.a)
+         umsg.End()
+end

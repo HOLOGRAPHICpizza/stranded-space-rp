@@ -454,6 +454,24 @@ end
 
 concommand.Add("gms_OpenDropResourceWindow",GM.OpenDropResourceWindow)
 
+-- Gman Menu
+-- function GM.OpenGmanWindow()
+	-- local GM = GAMEMODE
+	
+	-- local tr = LocalPlayer():TraceFromEyes(150)
+	-- if not tr.Entity:IsValid() and not tr.Entity:GetClass() == 'gms_gman' then
+		-- LocalPlayer():SendMessage("Aim at the Gman.", 3, Color(200,0,0,255))
+		-- return
+	-- end
+	
+	-- Msg(GM.GmanWindow)
+	-- if !GM.GmanWindow then GM.GmanWindow = vgui.Create("GMS_GmanWindow") end
+	-- Msg(GM.GmanWindow)
+	
+	-- GM.GmanWindow:SetVisible(!GM.GmanWindow:IsVisible())
+-- end
+-- concommand.Add("gms_OpenGmanWindow",GM.OpenGmanWindow)
+
 /*---------------------------------------------------------
   Planting menu
 ---------------------------------------------------------*/
@@ -575,7 +593,7 @@ function TraceHUD()
 			draw.SimpleTextOutlined(tostring(runs * 10) .. '%', "ScoreboardText", ScrW() / 2, (ScrH() / 2) + 40, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
 		end
 		
-		-- draw.SimpleTextOutlined(tr.Entity:GetClass(), "ScoreboardText", ScrW() - 10, ScrH() - 40, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, Color(0,0,0,255))
+		draw.SimpleTextOutlined(tr.Entity:GetClass(), "ScoreboardText", ScrW() - 10, ScrH() - 40, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, Color(0,0,0,255))
 	end
 end
 hook.Add("HUDPaint", "TraceHUD", TraceHUD)

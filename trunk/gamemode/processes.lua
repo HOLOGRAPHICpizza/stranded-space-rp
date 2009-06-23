@@ -1081,6 +1081,8 @@ function PROCESS:OnStop()
              self.Owner:SendMessage("Made "..string.gsub(k,"_"," ").." ("..v.."x)", 3, Color(10,200,10,255))
              self.Owner:IncResource(k,v)
          end
+		 
+		 ply:DecMoney(self.Data.Price)
 
          self.Owner:Freeze(false)
 end

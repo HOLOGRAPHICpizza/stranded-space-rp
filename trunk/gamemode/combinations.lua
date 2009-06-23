@@ -206,7 +206,7 @@ GMS.RegisterCombi("Paper",COMBI,"Generic")
 local COMBI = {}
 
 COMBI.Name = "Joint"
-COMBI.Description = [[Woahhh maaaan this is some trippy stuff!
+COMBI.Description = [[Sells for more than hemp alone.
 You need:
 1 Hemp
 1 Paper
@@ -950,3 +950,39 @@ COMBI.Results = {}
 COMBI.Results["Powerthirst"] = 1
 
 GMS.RegisterCombi("Powerthirst",COMBI,"Drugs")
+
+-- Gman Stuff
+
+-- Turd
+-- local COMBI = {}
+
+-- COMBI.Name = "Turd"
+-- COMBI.Description = [[A big expansive turd.
+-- You need:
+-- $5000
+-- ]]
+
+-- --COMBI.Price = 5000
+
+-- COMBI.Req = {}
+
+-- COMBI.Results = {}
+-- COMBI.Results["Turd"] = 1
+
+-- GMS.RegisterCombi("Turd",COMBI,"Gman")
+
+-- -- Pizza
+-- COMBI.Name = "Pizza"
+-- COMBI.Description = [[Gimme ur turd!
+-- You will recive:
+-- $5000
+-- ]]
+
+-- --COMBI.Value = 5000
+
+-- COMBI.Req = {}
+-- COMBI.Req["Turd"] = 1
+
+-- COMBI.Results = {}
+
+-- GMS.RegisterCombi("Pizza",COMBI,"Gman")

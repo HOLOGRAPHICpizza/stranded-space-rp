@@ -18,7 +18,7 @@ function ENT:Initialize()
 	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	self.Entity:SetSolid( SOLID_VPHYSICS )
 
-	self.Entity:SetColor(0,0,0,255)
+	-- self.Entity:SetColor(0,0,0,255)
 end
 
 function ENT:SetSpawnName(spawnName)
