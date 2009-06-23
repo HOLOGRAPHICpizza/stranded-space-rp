@@ -475,6 +475,7 @@ PANEL.CmdButtons["gms_admin_maketree"] = "Spawn tree"
 PANEL.CmdButtons["gms_admin_makebush"] = "Spawn random plant"
 PANEL.CmdButtons["gms_admin_saveallcharacters"] = "Save all characters"
 PANEL.CmdButtons["gms_admin_creategman"] = "Spawn Gman"
+PANEL.CmdButtons["gms_admin_createstore"] = "Spawn Store"
 
 function PANEL:Init()
 	self:SetTitle("Admin Menu")

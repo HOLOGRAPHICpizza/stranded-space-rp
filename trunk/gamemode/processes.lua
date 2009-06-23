@@ -1082,7 +1082,7 @@ function PROCESS:OnStop()
              self.Owner:IncResource(k,v)
          end
 		 
-		 ply:DecMoney(self.Data.Price)
+		 self.Owner:DecMoney(self.Data.Price)
 
          self.Owner:Freeze(false)
 end

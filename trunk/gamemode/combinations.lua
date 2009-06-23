@@ -986,3 +986,59 @@ GMS.RegisterCombi("Powerthirst",COMBI,"Drugs")
 -- COMBI.Results = {}
 
 -- GMS.RegisterCombi("Pizza",COMBI,"Gman")
+
+-- Store Stuff
+
+-- Wood
+local COMBI = {}
+
+COMBI.Name = "Wood"
+COMBI.Description = [[100 units of wood.
+You need:
+$750
+]]
+
+COMBI.Price = 750
+
+COMBI.Req = {}
+
+COMBI.Results = {}
+COMBI.Results["Wood"] = 100
+
+GMS.RegisterCombi("Wood",COMBI,"Store")
+
+-- Iron
+local COMBI = {}
+
+COMBI.Name = "Iron"
+COMBI.Description = [[100 units of iron.
+You need:
+$1000
+]]
+
+COMBI.Price = 1000
+
+COMBI.Req = {}
+
+COMBI.Results = {}
+COMBI.Results["Iron"] = 100
+
+GMS.RegisterCombi("Iron",COMBI,"Store")
+
+-- Stone
+local COMBI = {}
+
+COMBI.Name = "Stone"
+COMBI.Description = [[100 units of stone.
+You need:
+$500
+]]
+
+COMBI.Price = 500
+
+COMBI.Req = {}
+
+COMBI.Results = {}
+COMBI.Results["Stone"] = 100
+
+GMS.RegisterCombi("Stone",COMBI,"Store")

@@ -1131,6 +1131,25 @@ function GM.CreateGman(ply,cmd,args)
 end
 concommand.Add("gms_admin_creategman",GM.CreateGman)
 
+function GM.CreateStore(ply,cmd,args)
+	if !ply:IsAdmin() then 
+		ply:SendMessage("You need admin rights for this!",3,Color(200,0,0,255))
+	return end
+	
+	local tr = ply:TraceFromEyes(150)
+	
+	if tr.HitWorld then
+		local ent = ents.Create("GMS_Store")
+		ent:SetPos(tr.HitPos)
+		ent:Spawn()
+		-- ent:GetPhysicsObject():EnableMotion(false)
+		-- Msg('Spawnpoint created for class ' .. ent:GetSpawnName() .. ".\n")
+	else
+		ply:SendMessage("Aim at the ground to spawn.",3,Color(200,0,0,255))
+	end
+end
+concommand.Add("gms_admin_createstore",GM.CreateStore)
+
 /*---------------------------------------------------------
 
   Prop fadeout
@@ -2024,6 +2043,17 @@ function GM.MakeCombination(ply,cmd,args)
 			ply:SendMessage("You need to be close to a Gman!",3,Color(200,0,0,255))
 			ply:CloseCombiMenu()
 		return end
+	elseif group == "Store" then
+		local nearby = false
+		
+		for k,v in pairs(ents.FindInSphere(ply:GetPos(),100)) do
+			if v:GetClass() == "gms_store" then nearby = true end
+		end
+		
+		if !nearby then
+			ply:SendMessage("You need to be close to a Store!",3,Color(200,0,0,255))
+			ply:CloseCombiMenu()
+		return end
 	end
 
 	//Check for skills
@@ -2083,7 +2113,7 @@ function GM.MakeCombination(ply,cmd,args)
 
 		ply:DoProcess("Cook",time,data)
 
-	elseif group == "Generic" or group == "Drugs" or group == 'Gman' then
+	elseif group == "Generic" or group == "Drugs" or group == 'Gman' or group == 'Store' then
 		local data = {}
 		data.Name = tbl.Name
 		data.Res = tbl.Results
@@ -2566,6 +2596,8 @@ function GM.UseKeyHook(ply,key)
 				-- ply:ConCommand("gms_OpenGmanWindow\n")
 				-- ply:OpenCombiMenu("Gman")
 				ply:ConCommand("gms_selldrugs\n")
+			elseif cls == 'gms_store' then
+				ply:OpenCombiMenu("Store")
 			end
 		end
 	elseif tr.HitWorld then
