@@ -1,0 +1,9 @@
+Exchange Rates
+
+.2 iron =	$1
+.4 wood =	$1
+1 stone =	$1
+
+1 iron =	$5
+1 wood =	$2.50
+1 stone =	$1
