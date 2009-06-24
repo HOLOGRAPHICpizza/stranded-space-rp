@@ -16,7 +16,7 @@
   * Added autoloading gamesave of map name.
   * Changed several entities to prop_physics_multiplayer to save on resources.
 
-= 0.3 =
+= 1.0 =
   * Added Class Spawnpoints
   * Gave Cops Stunsticks
   * Added Warrant System
@@ -30,3 +30,4 @@
   * Added weaponbench.
   * Added Hemp and Joints.
   * Added Drugs for the doctor class.
+  * Added Resource Store
