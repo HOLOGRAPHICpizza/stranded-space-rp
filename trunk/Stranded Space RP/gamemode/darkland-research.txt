@@ -1,0 +1,27 @@
+payday time		2mins
+
+starting money	$750
+citizen payday	$50
+cop payday		$50
+gangster		$50
+doctor payday	$60
+builder payday	$60
+mayor payday	$100
+mobboss payday	$80
+
+drugs			$600
+10x lockpick	$1000
+10x health pack	$1000
+sign			$300
+glock			$300
+ammo			$500
+shotty			$2500
+M16				$2500
+Deagle			$450
+Mac10			$1500
+FiveSeven		$300
+Crowbar			$250
+AK-47			$3000
+MP5				$2000
+
+drug sell		$150
