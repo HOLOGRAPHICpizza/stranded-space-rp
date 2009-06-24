@@ -1,7 +1,7 @@
 "Gamemode"
 {
 	"name"		"Stranded Space RP"
-	"version"	"0.3"
+	"version"	"1.0"
 	"author_name"	"jA_cOp, LS/RD/SB Team, HOLOGRAPHICpizza"
 	"author_email"	"HOLOGRAPHICpizza@gmodplanet.com"
 	"author_url"	"http://www.gmodplanet.com/"

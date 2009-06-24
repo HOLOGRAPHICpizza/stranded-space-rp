@@ -6,7 +6,7 @@
 
 ---------------------------------------------------------*/
 
-Msg("Loading shared.lua\n")
+-- Msg("Loading shared.lua\n")
 
 GMS = {}
 
@@ -182,7 +182,8 @@ GMS.SavedClasses = {
 	"gms_workbench",
 	"gms_stove",
 	"gms_spawnpoint",
-	"gms_gman"
+	"gms_gman",
+	"gms_store"
 }
 
 GMS.Commands = {}

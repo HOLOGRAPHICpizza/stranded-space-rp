@@ -84,6 +84,7 @@ function ENT:Grow()
 	elseif strType == "berry" then
 		GM.MakeBush(self.Entity:GetPos())
 	elseif strType == "hemp" then
+		ply.Hemps = ply.Hemps - 1
 		GM.MakeHemp(self.Entity:GetPos())
 	end
 
