@@ -179,7 +179,7 @@ PROCESS.Results[1] = "Melon Seeds"
 PROCESS.Results[2] = "Grain Seeds"
 PROCESS.Results[3] = "Herbs"
 PROCESS.Results[4] = "Berries"
-PROCESS.Results[5] = "Hemp Seeds"
+-- PROCESS.Results[5] = "Hemp Seeds"
 
 function PROCESS:OnStart()
          self.Owner:MakeProcessBar("Foraging",self.Time)

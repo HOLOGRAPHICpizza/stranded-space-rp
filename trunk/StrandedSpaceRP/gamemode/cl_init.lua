@@ -455,22 +455,22 @@ end
 concommand.Add("gms_OpenDropResourceWindow",GM.OpenDropResourceWindow)
 
 -- Gman Menu
--- function GM.OpenGmanWindow()
-	-- local GM = GAMEMODE
+function GM.OpenGmanWindow()
+	local GM = GAMEMODE
 	
-	-- local tr = LocalPlayer():TraceFromEyes(150)
-	-- if not tr.Entity:IsValid() and not tr.Entity:GetClass() == 'gms_gman' then
-		-- LocalPlayer():SendMessage("Aim at the Gman.", 3, Color(200,0,0,255))
-		-- return
-	-- end
+	local tr = LocalPlayer():TraceFromEyes(150)
+	if not tr.Entity:IsValid() and not tr.Entity:GetClass() == 'gms_gman' then
+		LocalPlayer():SendMessage("Aim at the Gman.", 3, Color(200,0,0,255))
+		return
+	end
 	
 	-- Msg(GM.GmanWindow)
-	-- if !GM.GmanWindow then GM.GmanWindow = vgui.Create("GMS_GmanWindow") end
+	if !GM.GmanWindow then GM.GmanWindow = vgui.Create("GMS_GmanWindow") end
 	-- Msg(GM.GmanWindow)
 	
-	-- GM.GmanWindow:SetVisible(!GM.GmanWindow:IsVisible())
--- end
--- concommand.Add("gms_OpenGmanWindow",GM.OpenGmanWindow)
+	GM.GmanWindow:SetVisible(!GM.GmanWindow:IsVisible())
+end
+concommand.Add("gms_OpenGmanWindow",GM.OpenGmanWindow)
 
 /*---------------------------------------------------------
   Planting menu

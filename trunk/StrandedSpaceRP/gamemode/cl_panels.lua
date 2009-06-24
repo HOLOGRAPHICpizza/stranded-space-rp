@@ -343,6 +343,38 @@ end
 
 vgui.Register("GMS_PlantingMenu",PANEL,"GMS_Frame")
 
+-- Gman Window
+local PANEL = {}
+
+PANEL.Plantables = {}
+PANEL.Plantables["gms_selldrugs"] = "Sell Drugs"
+PANEL.Plantables["gms_OpenGmanCombi"] = "Buy Drug Stuff"
+
+function PANEL:Init()
+         self:SetTitle("Gman")
+         self:SetKeyboardInputEnabled(true)
+         self:SetMouseInputEnabled(true)
+         
+         local size = ScrH() / 30
+         local space = 10
+
+         self:SetSize(ScrW() / 6, (table.Count(self.Plantables) * (size + space)) + 30)
+         self:SetPos(ScrW() / 1.3 - (self:GetWide() / 2), ScrH() / 2 - (self:GetTall() / 2))
+
+         local line = 25
+
+         for cmd,txt in pairs(self.Plantables) do
+             local button = vgui.Create("gms_CommandButton",self)
+             button:SetSize(self:GetWide() - ((self:GetWide() / 8) * 2),ScrH() / 30)
+             button:SetPos(self:GetWide() / 8, line)
+             button:SetConCommand(cmd.."\n")
+             button:SetText(txt)
+             
+             line = line + button:GetTall() + 10
+         end
+end
+vgui.Register("GMS_GmanWindow",PANEL,"GMS_Frame")
+
 /*---------------------------------------------------------
   Options menu
 ---------------------------------------------------------*/

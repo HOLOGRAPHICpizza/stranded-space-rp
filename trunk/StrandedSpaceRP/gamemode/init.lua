@@ -6,7 +6,7 @@
 
 ---------------------------------------------------------*/
 
-Msg("Loading init.lua\n")
+-- Msg("Loading init.lua\n")
 
 /*---------------------------------------------------------
   Pre-Defines
@@ -1283,6 +1283,7 @@ function GM:PlayerInitialSpawn(ply)
 	ply.Warranted = false
 	ply.Jailed = false
 	ply.Tools = {}
+	ply.Hemps = 0
 	
 	//Admin info, needed clientside
 	if ply:IsAdmin() then
@@ -1685,36 +1686,42 @@ concommand.Add("gms_plantgrain",GM.PlantGrain)
 
 -- Hemp planting
 function GM.PlantHemp(ply,cmd,args)
-         local tr = ply:TraceFromEyes(150)
-         
-         if tr.HitWorld then
-            local nearby = false
-            
-            for k,v in pairs(ents.FindInSphere(tr.HitPos,25)) do
-                if v:IsHempModel() or v:IsProp() or v:GetClass() == "gms_seed" then
-                   nearby = true
-                end
-            end
+	if ply.Hemps >= 5 then
+		ply:SendMessage("You can only have 5 hemp plants at a time.",3,Color(200,0,0,255))
+		return
+	end
+	
+	local tr = ply:TraceFromEyes(150)
+	
+	if tr.HitWorld then
+		local nearby = false
+		
+		for k,v in pairs(ents.FindInSphere(tr.HitPos,25)) do
+			if v:IsHempModel() or v:IsProp() or v:GetClass() == "gms_seed" then
+			nearby = true
+			end
+		end
 
-            if (tr.MatType == MAT_DIRT or tr.MatType == MAT_GRASS or tr.MatType == MAT_SAND) and !GMS.IsInWater(tr.HitPos) then
-               if ply:GetResource("Hemp_Seeds") >= 1 then
-                  if !nearby then
-                     local data = {}
-                     data.Pos = tr.HitPos
-
-                     ply:DoProcess("PlantHemp",3,data)
-                  else
-                     ply:SendMessage("You need more distance between seeds/props.",3,Color(200,0,0,255))
-                  end
-               else
-                  ply:SendMessage("You need a hemp seed.",3,Color(200,0,0,255))
-               end
-            else
-               ply:SendMessage("You cannot plant on this terrain.",3,Color(200,0,0,255))
-            end
-         else
-            ply:SendMessage("Aim at the ground to plant.",3,Color(200,0,0,255))
-         end
+		if (tr.MatType == MAT_DIRT or tr.MatType == MAT_GRASS or tr.MatType == MAT_SAND) and !GMS.IsInWater(tr.HitPos) then
+			if ply:GetResource("Hemp_Seeds") >= 1 then
+				if !nearby then
+					local data = {}
+					data.Pos = tr.HitPos
+					
+					ply.Hemps = ply.Hemps + 1
+					ply:DoProcess("PlantHemp",3,data)
+				else
+					ply:SendMessage("You need more distance between seeds/props.",3,Color(200,0,0,255))
+				end
+			else
+				ply:SendMessage("You need a hemp seed.",3,Color(200,0,0,255))
+			end
+		else
+			ply:SendMessage("You cannot plant on this terrain.",3,Color(200,0,0,255))
+		end
+	else
+		ply:SendMessage("Aim at the ground to plant.",3,Color(200,0,0,255))
+	end
 end
 concommand.Add("gms_planthemp",GM.PlantHemp)
 
@@ -1873,6 +1880,12 @@ function GM.SellDrugs(ply)
 	end
 end
 concommand.Add("gms_selldrugs",GM.SellDrugs)
+
+-- Open Gman Combi
+function GM.OpenGmanCombi(ply)
+	ply:OpenCombiMenu("Gman")
+end
+concommand.Add("gms_OpenGmanCombi",GM.OpenGmanCombi)
 
 /*---------------------------------------------------------
 
@@ -2593,9 +2606,9 @@ function GM.UseKeyHook(ply,key)
 			elseif ent:IsOnFire() then
 				ply:OpenCombiMenu("Cooking")
 			elseif cls == 'gms_gman' then
-				-- ply:ConCommand("gms_OpenGmanWindow\n")
+				ply:ConCommand("gms_OpenGmanWindow\n")
 				-- ply:OpenCombiMenu("Gman")
-				ply:ConCommand("gms_selldrugs\n")
+				-- ply:ConCommand("gms_selldrugs\n")
 			elseif cls == 'gms_store' then
 				ply:OpenCombiMenu("Store")
 			end

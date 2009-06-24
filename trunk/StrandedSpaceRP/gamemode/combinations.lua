@@ -953,39 +953,23 @@ GMS.RegisterCombi("Powerthirst",COMBI,"Drugs")
 
 -- Gman Stuff
 
--- Turd
--- local COMBI = {}
+-- Hemp Seeds
+local COMBI = {}
 
--- COMBI.Name = "Turd"
--- COMBI.Description = [[A big expansive turd.
--- You need:
--- $5000
--- ]]
+COMBI.Name = "Hemp Seeds"
+COMBI.Description = [[Used for growing the trippy hemp plant.
+You need:
+$600
+]]
 
--- --COMBI.Price = 5000
+COMBI.Price = 600
 
--- COMBI.Req = {}
+COMBI.Req = {}
 
--- COMBI.Results = {}
--- COMBI.Results["Turd"] = 1
+COMBI.Results = {}
+COMBI.Results["Hemp_Seeds"] = 1
 
--- GMS.RegisterCombi("Turd",COMBI,"Gman")
-
--- -- Pizza
--- COMBI.Name = "Pizza"
--- COMBI.Description = [[Gimme ur turd!
--- You will recive:
--- $5000
--- ]]
-
--- --COMBI.Value = 5000
-
--- COMBI.Req = {}
--- COMBI.Req["Turd"] = 1
-
--- COMBI.Results = {}
-
--- GMS.RegisterCombi("Pizza",COMBI,"Gman")
+GMS.RegisterCombi("Hemp_Seeds",COMBI,"Gman")
 
 -- Store Stuff
 
