@@ -31,3 +31,5 @@
   * Added Hemp and Joints.
   * Added Drugs for the doctor class.
   * Added Resource Store
+  * Changed Drug System
+  * Added Help
