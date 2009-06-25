@@ -21,6 +21,8 @@ function ENT:Initialize()
 		self.Entity:SetMoveType( MOVETYPE_NONE )
 		self.Entity:SetSolid( SOLID_VPHYSICS )
 		
+		self.Entity.StrandedProtected = true
+		
 		self.Entity.Runs = 0
 		self.Entity:SetNWInt('runs', self.Entity.Runs)
 	else
