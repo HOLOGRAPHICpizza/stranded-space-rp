@@ -14,7 +14,10 @@ function ENT:Initialize()
 	self.Entity:DropToFloor( )
 	self.Entity:SetMoveType( MOVETYPE_NONE )
  	self.Entity:SetMaterial("models/wireframe")
+	
  	self.Entity.StrandedProtected = true
+	self.Entity:CPPISetOwner(self.Entity.Player)
+	
  	self.LastUsed = CurTime()
 end
 
@@ -59,6 +62,7 @@ function ENT:Finish()
 	ent:SetNetworkedString('Name', self.Entity.Name)
     ent:Spawn()
     --SPropProtection.PlayerMakePropOwner(ent.Player, ent)
+	ent:CPPISetOwner(ent.Player)
     ent:Fadein()
  
     self.Entity.Player.HasBuildingSite = false
