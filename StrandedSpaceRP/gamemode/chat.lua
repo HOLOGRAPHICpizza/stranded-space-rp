@@ -537,3 +537,10 @@ function MakeResource(ply, text)
 	return ''
 end
 AddChatCommand('/makeresource', MakeResource)
+
+function ShowHelp(ply, text)
+	ply:ConCommand('gms_help\n')
+	
+	return ''
+end
+AddChatCommand('/help', ShowHelp)

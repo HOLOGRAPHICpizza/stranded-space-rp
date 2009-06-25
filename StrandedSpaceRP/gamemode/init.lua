@@ -50,7 +50,7 @@ GM.NextLoaded = 0
 /*---------------------------------------------------------
   Custom Resources
 ---------------------------------------------------------*/
-resource.AddFile("gamemodes/GMStranded/help.htm")
+resource.AddFile("gamemodes/GMStranded/help.html")
 
 for k,v in pairs(file.Find("../materials/gui/GMS/*")) do
     resource.AddFile("materials/gui/GMS/"..v)
