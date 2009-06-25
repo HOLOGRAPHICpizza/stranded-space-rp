@@ -362,7 +362,7 @@ function GM.OpenHelpMenu()
 
          if GM.HelpMenu then 
          GM.HelpMenu:SetVisible(!GM.HelpMenu:IsVisible()) 
-         GM.HelpMenu.HTML:SetHTML(file.Read("../gamemodes/GMStranded/help.htm"))
+         GM.HelpMenu.HTML:SetHTML(file.Read("../gamemodes/GMStranded/help.html"))
          return end
          
          GM.HelpMenu = vgui.Create("GMS_Frame")
@@ -370,12 +370,12 @@ function GM.OpenHelpMenu()
          GM.HelpMenu:SetPos(50,50)
          GM.HelpMenu:SetSize(ScrW() - 100, ScrH() - 100)
 
-         GM.HelpMenu:SetTitle("Welcome to Gmod Stranded")
+         GM.HelpMenu:SetTitle("Welcome to Stranded Space RP")
 
          GM.HelpMenu.HTML = vgui.Create("HTML",GM.HelpMenu)
          GM.HelpMenu.HTML:SetSize(GM.HelpMenu:GetWide() - 50, GM.HelpMenu:GetTall() - 50)
          GM.HelpMenu.HTML:SetPos(25,25)
-         GM.HelpMenu.HTML:SetHTML(file.Read("../gamemodes/GMStranded/help.htm"))
+         GM.HelpMenu.HTML:SetHTML(file.Read("../gamemodes/StrandedSpaceRP/help.html"))
 
          GM.HelpMenu:SetKeyboardInputEnabled(true)
          GM.HelpMenu:SetMouseInputEnabled(true)
