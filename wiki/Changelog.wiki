@@ -33,3 +33,4 @@
   * Added Resource Store
   * Changed Drug System
   * Added Help
+  * Added Multiple Spawn Point Support
