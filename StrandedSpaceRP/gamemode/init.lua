@@ -50,7 +50,7 @@ GM.NextLoaded = 0
 /*---------------------------------------------------------
   Custom Resources
 ---------------------------------------------------------*/
-resource.AddFile("gamemodes/GMStranded/help.html")
+resource.AddFile("gamemodes/StrandedSpaceRP/help.html")
 
 for k,v in pairs(file.Find("../materials/gui/GMS/*")) do
     resource.AddFile("materials/gui/GMS/"..v)
@@ -1360,21 +1360,30 @@ function GMS.LoadCharacter(ply)
 end
 
 function GM:PlayerSpawn(ply)
-	--Msg(ply.Jailed)
+	local class = ply:Team()
 	if ply.Jailed then
-		--Msg('U IS IN JAIL!!!')
-		for k,ent in pairs(ents.GetAll()) do
-			if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == 'jail')) then
-				ent:SpawnPlayer(ply)
-			end
-		end
-	else
-		for k,ent in pairs(ents.GetAll()) do
-			if ((ent:GetClass() == 'gms_spawnpoint') and (ent:GetSpawnName() == ply:Team())) then
-				ent:SpawnPlayer(ply)
-			end
+		class = 'jail'
+	end
+	
+	local classSpawns = {}
+	for k,ent in pairs(GMS.SpawnPoints) do
+		if ent:GetSpawnName() == class then
+			table.insert(classSpawns, ent)
 		end
 	end
+	
+	local spawned = false
+	for k,ent in pairs(classSpawns) do
+		if ent:CheckSpawn() then
+			ent:SpawnPlayer(ply)
+			spawned = true
+			break
+		end
+	end
+	
+	-- if not spawned and firstPlayerMapLoad then
+		-- classSpawns[1]:SpawnPlayer(ply)
+	-- end
 	
 	if ply:HasUnlock("Sprint_Mkii") then
 		ply:SetWalkSpeed(400)

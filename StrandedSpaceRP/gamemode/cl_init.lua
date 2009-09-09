@@ -6,7 +6,7 @@
 
 ---------------------------------------------------------*/
 
-Msg("Loading cl_init.lua\n")
+--Msg("Loading cl_init.lua\n")
 
 -- DeriveGamemode( "sandbox" )
 include( 'shared.lua' )
@@ -593,7 +593,7 @@ function TraceHUD()
 			draw.SimpleTextOutlined(tostring(runs * 10) .. '%', "ScoreboardText", ScrW() / 2, (ScrH() / 2) + 40, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(0,0,0,255))
 		end
 		
-		draw.SimpleTextOutlined(tr.Entity:GetClass(), "ScoreboardText", ScrW() - 10, ScrH() - 40, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, Color(0,0,0,255))
+		--draw.SimpleTextOutlined(tr.Entity:GetClass(), "ScoreboardText", ScrW() - 10, ScrH() - 40, Color(255,255,255,255), TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, Color(0,0,0,255))
 	end
 end
 hook.Add("HUDPaint", "TraceHUD", TraceHUD)

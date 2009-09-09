@@ -5,7 +5,7 @@
 
 ------------------------------------------------*/
 
-Msg("Loading init_sb.lua\n")
+--Msg("Loading init_sb.lua\n")
 
 Complete_Planet_Backup = {}
 //Send to client

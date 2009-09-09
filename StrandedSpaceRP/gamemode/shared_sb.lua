@@ -5,7 +5,7 @@
 
 ---------------------------------------------------------*/
 
-Msg("Loading shared_sb.lua\n")
+--Msg("Loading shared_sb.lua\n")
 
 DeriveGamemode("sandbox")
 GM.IsSandboxDerived = true
