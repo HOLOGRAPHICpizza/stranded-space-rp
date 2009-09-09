@@ -26,6 +26,9 @@ function ENT:SetSpawnName(spawnName)
 	self.Entity:SetMaterial('models/debug/debugwhite')
 	local color = team.GetColor(spawnName)
 	self.Entity:SetColor(color.r,color.g,color.b,color.a)
+	
+	-- Register Spawn Point
+	table.insert(GMS.SpawnPoints, self.Entity)
 end
 
 function ENT:GetSpawnName(spawnName)
@@ -34,6 +37,18 @@ end
 
 function ENT:SpawnPlayer(ply)
 	ply:SetPos(self.Entity:GetPos() + Vector(0,0,16))
+end
+
+function ENT:CheckSpawn()
+	local tracedata = {}
+	tracedata.start = self.Entity:GetPos()
+	tracedata.endpos = tracedata.start + Vector(0,0,64)
+	tracedata.filter = self.Entity
+	tracedata.mask = MASK_PLAYERSOLID
+	
+	local trace = util.TraceLine(tracedata)
+	--Msg(trace.Hit)
+	return not trace.Hit
 end
 
 function ENT:Use(ply)

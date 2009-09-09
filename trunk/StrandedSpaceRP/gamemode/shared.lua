@@ -29,6 +29,8 @@ team.SetUp(6, "Mayor", Color(220, 0, 0, 255)) -- Red
 team.SetUp(7, "Mob Boss", Color(60, 60, 60, 255)) -- Dark Grey
 
 -- Tables
+GMS.SpawnPoints = {}
+
 GMS.NoDrop = {
 	'gms_hands',
 	'gms_stunstick',
